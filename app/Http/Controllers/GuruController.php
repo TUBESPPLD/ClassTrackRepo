@@ -210,7 +210,7 @@ class GuruController extends Controller
     {
         foreach ($request->input('records', []) as $studentId => $status) {
             Attendance::updateOrCreate(
-                ['class_id' => $classroom->id, 'student_id' => $studentId, 'date' => now()->toDateString()],
+                ['class_id' => $classroom->id, 'student_id' => $studentId, 'date' => now()->startOfDay()],
                 ['status' => $status]
             );
         }
@@ -223,16 +223,41 @@ class GuruController extends Controller
         $labels = [];
         $scores = [];
         $attRates = [];
+        $data = [];
+        
         foreach ($students as $student) {
             $labels[] = $student->name;
-            $scores[] = Submission::where('student_id', $student->id)
+            
+            $avgGrade = Submission::where('student_id', $student->id)
                 ->whereHas('assignment', fn ($q) => $q->where('class_id', $classroom->id))
                 ->avg('grade') ?? 0;
-            $total = Attendance::where('class_id', $classroom->id)->where('student_id', $student->id)->count();
+            $avgGrade = round($avgGrade, 2);
+            $scores[] = $avgGrade;
+            
             $hadir = Attendance::where('class_id', $classroom->id)->where('student_id', $student->id)->where('status', 'hadir')->count();
-            $attRates[] = $total > 0 ? round(($hadir / $total) * 100, 2) : 0;
+            $sakit = Attendance::where('class_id', $classroom->id)->where('student_id', $student->id)->where('status', 'sakit')->count();
+            $izin = Attendance::where('class_id', $classroom->id)->where('student_id', $student->id)->where('status', 'izin')->count();
+            $alpa = Attendance::where('class_id', $classroom->id)->where('status', 'alpa')->where('student_id', $student->id)->count();
+            // Menghindari count() tanpa kondisi array, dan memastikan total diambil dari rekap
+            $total = $hadir + $sakit + $izin + $alpa;
+            
+            $presensi = $total > 0 ? round(($hadir / $total) * 100, 2) : 0;
+            $attRates[] = $presensi;
+            
+            $data[] = [
+                'student' => $student,
+                'avgNilai' => $avgGrade,
+                'presensi' => $presensi,
+                'kehadiran' => [
+                    'hadir' => $hadir,
+                    'sakit' => $sakit,
+                    'izin' => $izin,
+                    'alpa' => $alpa,
+                    'total' => $total,
+                ]
+            ];
         }
-        return view('monitoring.index', compact('classroom', 'labels', 'scores', 'attRates'));
+        return view('monitoring.index', compact('classroom', 'labels', 'scores', 'attRates', 'data'));
     }
 
     public function remedial(Request $request)
