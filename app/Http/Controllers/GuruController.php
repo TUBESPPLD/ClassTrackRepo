@@ -228,6 +228,13 @@ class GuruController extends Controller
         foreach ($students as $student) {
             $labels[] = $student->name;
             
+            $avgSubmission = Submission::where('student_id', $student->id)
+                ->whereHas('assignment', fn ($q) => $q->where('class_id', $classroom->id))
+                ->avg('grade') ?? 0;
+            $avgQuiz = \App\Models\QuizAttempt::where('student_id', $student->id)
+                ->whereHas('quiz', fn ($q) => $q->where('class_id', $classroom->id))
+                ->avg('score') ?? 0;
+            $avgGrade = round(($avgSubmission + $avgQuiz) / 2, 2);
             $avgGrade = Submission::where('student_id', $student->id)
                 ->whereHas('assignment', fn ($q) => $q->where('class_id', $classroom->id))
                 ->avg('grade') ?? 0;
