@@ -231,16 +231,78 @@ class GuruController extends Controller
         $labels = [];
         $scores = [];
         $attRates = [];
+        $data = [];
+        
+        $data = [];
+        
         foreach ($students as $student) {
             $labels[] = $student->name;
-            $scores[] = Submission::where('student_id', $student->id)
+            
+            $avgSubmission = Submission::where('student_id', $student->id)
                 ->whereHas('assignment', fn ($q) => $q->where('class_id', $classroom->id))
                 ->avg('grade') ?? 0;
-            $total = Attendance::where('class_id', $classroom->id)->where('student_id', $student->id)->count();
+            $avgQuiz = \App\Models\QuizAttempt::where('student_id', $student->id)
+                ->whereHas('quiz', fn ($q) => $q->where('class_id', $classroom->id))
+                ->avg('score') ?? 0;
+            $avgGrade = round(($avgSubmission + $avgQuiz) / 2, 2);
+            $avgGrade = Submission::where('student_id', $student->id)
+            $avgAssignment = Submission::where('student_id', $student->id)
+                ->whereHas('assignment', fn ($q) => $q->where('class_id', $classroom->id))
+                ->avg('grade') ?? 0;
+            $avgGrade = round($avgGrade, 2);
+            $scores[] = $avgGrade;
+            
             $hadir = Attendance::where('class_id', $classroom->id)->where('student_id', $student->id)->where('status', 'hadir')->count();
-            $attRates[] = $total > 0 ? round(($hadir / $total) * 100, 2) : 0;
+            $sakit = Attendance::where('class_id', $classroom->id)->where('student_id', $student->id)->where('status', 'sakit')->count();
+            $izin = Attendance::where('class_id', $classroom->id)->where('student_id', $student->id)->where('status', 'izin')->count();
+            $alpa = Attendance::where('class_id', $classroom->id)->where('status', 'alpa')->where('student_id', $student->id)->count();
+            // Menghindari count() tanpa kondisi array, dan memastikan total diambil dari rekap
+            $total = $hadir + $sakit + $izin + $alpa;
+            
+            $presensi = $total > 0 ? round(($hadir / $total) * 100, 2) : 0;
+            $attRates[] = $presensi;
+            
+            $data[] = [
+                'student' => $student,
+                'avgNilai' => $avgGrade,
+                'presensi' => $presensi,
+                'kehadiran' => [
+                    'hadir' => $hadir,
+                    'sakit' => $sakit,
+                    'izin' => $izin,
+                    'alpa' => $alpa,
+                    'total' => $total,
+                ]
+            ];
+            
+            $avgQuiz = \App\Models\QuizAttempt::where('student_id', $student->id)
+                ->whereHas('quiz', fn ($q) => $q->where('class_id', $classroom->id))
+                ->avg('score') ?? 0;
+
+            $totalGrades = [];
+            if ($avgAssignment > 0) $totalGrades[] = $avgAssignment;
+            if ($avgQuiz > 0) $totalGrades[] = $avgQuiz;
+            $avgNilai = count($totalGrades) > 0 ? round(array_sum($totalGrades) / count($totalGrades), 2) : 0;
+
+            $totalAtt = Attendance::where('class_id', $classroom->id)->where('student_id', $student->id)->count();
+            $hadirAtt = Attendance::where('class_id', $classroom->id)->where('student_id', $student->id)->where('status', 'hadir')->count();
+            $attRate = $totalAtt > 0 ? round(($hadirAtt / $totalAtt) * 100, 2) : 0;
+
+            $risk = \App\Models\RiskFlag::where('student_id', $student->id)
+                ->where('class_id', $classroom->id)
+                ->where('status', 'open')
+                ->first();
+
+            $data[] = [
+                'student' => $student,
+                'avgNilai' => $avgNilai,
+                'presensi' => $attRate,
+                'risk' => $risk
+            ];
         }
-        return view('monitoring.index', compact('classroom', 'labels', 'scores', 'attRates'));
+        return view('monitoring.index', compact('classroom', 'labels', 'scores', 'attRates', 'data'));
+
+        return view('monitoring.index', compact('classroom', 'data'));
     }
 
     public function remedial(Request $request)
