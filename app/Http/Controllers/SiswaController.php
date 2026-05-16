@@ -18,7 +18,12 @@ class SiswaController extends Controller
     {
         $user = auth()->user();
         $classes = $user->memberClasses()->where('is_hidden', false)->get();
-        return view('dashboard-siswa', compact('classes'));
+        $riskFlags = \App\Models\RiskFlag::where('student_id', $user->id)
+            ->where('status', 'open')
+            ->with('classroom')
+            ->get();
+            
+        return view('dashboard-siswa', compact('classes', 'riskFlags'));
     }
 
     public function joinKelas(Request $request)
@@ -41,12 +46,17 @@ class SiswaController extends Controller
     {
         $request->validate(['file' => 'required|file|max:4096']);
         $submittedAt = now();
+        
+        if ($submittedAt->gt($assignment->deadline)) {
+            return back()->withErrors(['file' => 'Gagal mengumpulkan: Batas waktu tugas sudah terlewat.']);
+        }
+
         Submission::updateOrCreate(
             ['assignment_id' => $assignment->id, 'student_id' => auth()->id()],
             [
                 'file_path' => $request->file('file')->store('submissions', 'public'),
                 'submitted_at' => $submittedAt,
-                'status' => $submittedAt->gt($assignment->deadline) ? 'TERLAMBAT' : 'TEPAT_WAKTU',
+                'status' => 'TEPAT_WAKTU',
             ]
         );
         return back()->with('success', 'Tugas dikumpulkan.');
@@ -64,7 +74,7 @@ class SiswaController extends Controller
                 }
             }
             $score = $questions->count() ? ($correct / $questions->count()) * 100 : 0;
-            QuizAttempt::create([
+            $attempt = QuizAttempt::create([
                 'quiz_id' => $quiz->id,
                 'student_id' => auth()->id(),
                 'score' => $score,
@@ -72,6 +82,10 @@ class SiswaController extends Controller
                 'submitted_at' => now(),
                 'answers_json' => $answers,
             ]);
+
+            // Automatically trigger EWS analysis for this student
+            \App\Services\EWSService::analyzeStudent(auth()->id(), $quiz->class_id);
+
             return redirect()->route('siswa.nilai')->with('success', 'Kuis selesai.');
         }
 

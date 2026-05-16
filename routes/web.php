@@ -44,6 +44,7 @@ Route::middleware(['auth', 'guru'])->prefix('guru')->name('guru.')->group(functi
     Route::match(['get', 'post'], '/kelas/{classroom}/kuis', [GuruController::class, 'kuis'])->name('kuis');
     Route::post('/kelas/{classroom}/presensi', [GuruController::class, 'presensi'])->name('presensi');
     Route::get('/kelas/{classroom}/monitoring', [GuruController::class, 'monitoring'])->name('monitoring');
+    Route::post('/kelas/{classroom}/ews', [GuruController::class, 'analisisRisiko'])->name('ews.analisis');
     Route::post('/remedial', [GuruController::class, 'remedial'])->name('remedial');
 });
 

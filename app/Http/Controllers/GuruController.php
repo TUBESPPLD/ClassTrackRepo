@@ -177,6 +177,10 @@ class GuruController extends Controller
             'grade' => 'required|numeric|min:0|max:100',
             'feedback' => 'nullable|string',
         ]));
+
+        // Automatically trigger EWS analysis for this student
+        \App\Services\EWSService::analyzeStudent($submission->student_id, $submission->assignment->class_id);
+
         return back()->with('success', 'Nilai disimpan.');
     }
 
@@ -214,6 +218,10 @@ class GuruController extends Controller
                 ['status' => $status]
             );
         }
+
+        // Automatically trigger EWS analysis for all students in this class
+        \App\Services\EWSService::analyzeClass($classroom->id);
+
         return back()->with('success', 'Presensi tersimpan.');
     }
 
@@ -223,6 +231,8 @@ class GuruController extends Controller
         $labels = [];
         $scores = [];
         $attRates = [];
+        $data = [];
+        
         $data = [];
         
         foreach ($students as $student) {
@@ -236,6 +246,7 @@ class GuruController extends Controller
                 ->avg('score') ?? 0;
             $avgGrade = round(($avgSubmission + $avgQuiz) / 2, 2);
             $avgGrade = Submission::where('student_id', $student->id)
+            $avgAssignment = Submission::where('student_id', $student->id)
                 ->whereHas('assignment', fn ($q) => $q->where('class_id', $classroom->id))
                 ->avg('grade') ?? 0;
             $avgGrade = round($avgGrade, 2);
@@ -263,8 +274,35 @@ class GuruController extends Controller
                     'total' => $total,
                 ]
             ];
+            
+            $avgQuiz = \App\Models\QuizAttempt::where('student_id', $student->id)
+                ->whereHas('quiz', fn ($q) => $q->where('class_id', $classroom->id))
+                ->avg('score') ?? 0;
+
+            $totalGrades = [];
+            if ($avgAssignment > 0) $totalGrades[] = $avgAssignment;
+            if ($avgQuiz > 0) $totalGrades[] = $avgQuiz;
+            $avgNilai = count($totalGrades) > 0 ? round(array_sum($totalGrades) / count($totalGrades), 2) : 0;
+
+            $totalAtt = Attendance::where('class_id', $classroom->id)->where('student_id', $student->id)->count();
+            $hadirAtt = Attendance::where('class_id', $classroom->id)->where('student_id', $student->id)->where('status', 'hadir')->count();
+            $attRate = $totalAtt > 0 ? round(($hadirAtt / $totalAtt) * 100, 2) : 0;
+
+            $risk = \App\Models\RiskFlag::where('student_id', $student->id)
+                ->where('class_id', $classroom->id)
+                ->where('status', 'open')
+                ->first();
+
+            $data[] = [
+                'student' => $student,
+                'avgNilai' => $avgNilai,
+                'presensi' => $attRate,
+                'risk' => $risk
+            ];
         }
         return view('monitoring.index', compact('classroom', 'labels', 'scores', 'attRates', 'data'));
+
+        return view('monitoring.index', compact('classroom', 'data'));
     }
 
     public function remedial(Request $request)
@@ -276,5 +314,11 @@ class GuruController extends Controller
         ]);
         RemedialTask::create([...$data, 'created_by' => auth()->id(), 'status' => 'assigned']);
         return back()->with('success', 'Remedial diberikan.');
+    }
+
+    public function analisisRisiko(Classroom $classroom)
+    {
+        \App\Services\EWSService::analyzeClass($classroom->id);
+        return back()->with('success', 'Analisis EWS (Deteksi Risiko) selesai dijalankan secara otomatis.');
     }
 }
