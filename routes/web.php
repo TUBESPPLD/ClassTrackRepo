@@ -59,6 +59,7 @@ Route::middleware(['auth'])->prefix('siswa')->name('siswa.')->group(function () 
 
 Route::middleware(['auth'])->prefix('wali')->name('wali.')->group(function () {
     Route::get('/dashboard', [WaliController::class, 'dashboardAnak'])->name('dashboard');
+    Route::post('/link-student', [WaliController::class, 'linkStudent'])->name('link-student');
 });
 
 

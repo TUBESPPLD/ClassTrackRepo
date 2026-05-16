@@ -214,7 +214,7 @@ class GuruController extends Controller
     {
         foreach ($request->input('records', []) as $studentId => $status) {
             Attendance::updateOrCreate(
-                ['class_id' => $classroom->id, 'student_id' => $studentId, 'date' => now()->toDateString()],
+                ['class_id' => $classroom->id, 'student_id' => $studentId, 'date' => now()->startOfDay()],
                 ['status' => $status]
             );
         }
@@ -228,40 +228,19 @@ class GuruController extends Controller
     public function monitoring(Classroom $classroom)
     {
         $students = $classroom->members()->where('role', 'siswa')->get();
-        $data = [];
-        
+        $labels = [];
+        $scores = [];
+        $attRates = [];
         foreach ($students as $student) {
-            $avgAssignment = Submission::where('student_id', $student->id)
+            $labels[] = $student->name;
+            $scores[] = Submission::where('student_id', $student->id)
                 ->whereHas('assignment', fn ($q) => $q->where('class_id', $classroom->id))
                 ->avg('grade') ?? 0;
-            
-            $avgQuiz = \App\Models\QuizAttempt::where('student_id', $student->id)
-                ->whereHas('quiz', fn ($q) => $q->where('class_id', $classroom->id))
-                ->avg('score') ?? 0;
-
-            $totalGrades = [];
-            if ($avgAssignment > 0) $totalGrades[] = $avgAssignment;
-            if ($avgQuiz > 0) $totalGrades[] = $avgQuiz;
-            $avgNilai = count($totalGrades) > 0 ? round(array_sum($totalGrades) / count($totalGrades), 2) : 0;
-
-            $totalAtt = Attendance::where('class_id', $classroom->id)->where('student_id', $student->id)->count();
-            $hadirAtt = Attendance::where('class_id', $classroom->id)->where('student_id', $student->id)->where('status', 'hadir')->count();
-            $attRate = $totalAtt > 0 ? round(($hadirAtt / $totalAtt) * 100, 2) : 0;
-
-            $risk = \App\Models\RiskFlag::where('student_id', $student->id)
-                ->where('class_id', $classroom->id)
-                ->where('status', 'open')
-                ->first();
-
-            $data[] = [
-                'student' => $student,
-                'avgNilai' => $avgNilai,
-                'presensi' => $attRate,
-                'risk' => $risk
-            ];
+            $total = Attendance::where('class_id', $classroom->id)->where('student_id', $student->id)->count();
+            $hadir = Attendance::where('class_id', $classroom->id)->where('student_id', $student->id)->where('status', 'hadir')->count();
+            $attRates[] = $total > 0 ? round(($hadir / $total) * 100, 2) : 0;
         }
-
-        return view('monitoring.index', compact('classroom', 'data'));
+        return view('monitoring.index', compact('classroom', 'labels', 'scores', 'attRates'));
     }
 
     public function remedial(Request $request)

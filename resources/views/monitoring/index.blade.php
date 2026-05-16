@@ -145,6 +145,51 @@
         </div>
     </div>
 
+    <!-- Rekapitulasi Kehadiran -->
+    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden mb-8">
+        <div class="p-6 border-b border-gray-100">
+            <h3 class="text-lg font-bold text-gray-800">Rekapitulasi Kehadiran</h3>
+            <p class="text-sm text-gray-500 mt-1">Rincian status kehadiran (Hadir, Sakit, Izin, Alpa) per siswa.</p>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-50 text-gray-600 text-sm">
+                        <th class="px-6 py-4 font-semibold">Nama Siswa</th>
+                        <th class="px-6 py-4 font-semibold text-center">Hadir</th>
+                        <th class="px-6 py-4 font-semibold text-center">Sakit</th>
+                        <th class="px-6 py-4 font-semibold text-center">Izin</th>
+                        <th class="px-6 py-4 font-semibold text-center">Alpa</th>
+                        <th class="px-6 py-4 font-semibold text-center">Total Pertemuan</th>
+                        <th class="px-6 py-4 font-semibold text-center">Persentase</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 text-sm">
+                    @forelse($data as $d)
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-6 py-4 font-medium text-gray-800">{{ $d['student']->name }}</td>
+                            <td class="px-6 py-4 text-center text-green-600 font-bold">{{ $d['kehadiran']['hadir'] }}</td>
+                            <td class="px-6 py-4 text-center text-yellow-600 font-bold">{{ $d['kehadiran']['sakit'] }}</td>
+                            <td class="px-6 py-4 text-center text-blue-600 font-bold">{{ $d['kehadiran']['izin'] }}</td>
+                            <td class="px-6 py-4 text-center text-red-600 font-bold">{{ $d['kehadiran']['alpa'] }}</td>
+                            <td class="px-6 py-4 text-center font-bold text-gray-700">{{ $d['kehadiran']['total'] }}</td>
+                            <td class="px-6 py-4 text-center">
+                                <span class="{{ $d['presensi'] < 75 ? 'text-red-600 font-bold' : 'text-gray-600 font-bold' }}">
+                                    {{ $d['presensi'] }}%
+                                </span>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="px-6 py-8 text-center text-gray-500">Belum ada data presensi di kelas ini.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
     <!-- Modal Remedial -->
     <div id="modal-remedial" class="fixed inset-0 z-50 hidden bg-gray-900/50 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl w-full max-w-md p-8 shadow-xl relative">
