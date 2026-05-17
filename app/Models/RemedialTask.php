@@ -7,13 +7,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class RemedialTask extends Model
 {
-    protected $fillable = ['assignment_id', 'student_id', 'created_by', 'deadline', 'status'];
+    protected $fillable = ['assignment_id', 'class_id', 'student_id', 'created_by', 'deadline', 'note', 'status'];
 
     protected $casts = ['deadline' => 'datetime'];
 
     public function assignment(): BelongsTo
     {
         return $this->belongsTo(Assignment::class);
+    }
+
+    public function classroom(): BelongsTo
+    {
+        return $this->belongsTo(Classroom::class, 'class_id');
     }
 
     public function student(): BelongsTo

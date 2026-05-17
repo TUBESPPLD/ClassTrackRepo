@@ -82,20 +82,45 @@
                                 <div class="p-5 border border-gray-100 rounded-xl bg-white shadow-sm hover:border-blue-200 transition-colors">
                                     <h3 class="font-bold text-gray-800 mb-1">{{ $tugas->title }}</h3>
                                     <p class="text-xs text-gray-500 mb-3">{{ $tugas->description }}</p>
+
+                                    @if(method_exists($tugas, 'questionBankReferences') && $tugas->questionBankReferences->isNotEmpty())
+                                        <div class="mb-3 text-xs text-gray-600">
+                                            Referensi Bank Soal:
+                                            <ul class="list-disc ml-5 mt-1">
+                                                @foreach($tugas->questionBankReferences as $ref)
+                                                    <li>{{ $ref->question_text }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif
                                     
+                                    @php
+                                        $submission = $tugas->submissions()->where('student_id', auth()->id())->first();
+                                        $remedial = ($remedials ?? collect())->get($tugas->id);
+                                        $effectiveDeadline = $remedial ? $remedial->deadline : $tugas->deadline;
+                                        $effectivePast = \Carbon\Carbon::parse($effectiveDeadline)->isPast();
+                                    @endphp
+
                                     <div class="flex items-center justify-between mb-4">
-                                        <div class="flex items-center gap-1 text-xs font-medium {{ \Carbon\Carbon::parse($tugas->deadline)->isPast() ? 'text-red-500' : 'text-orange-500' }}">
+                                        <div class="flex items-center gap-1 text-xs font-medium {{ $effectivePast ? 'text-red-500' : 'text-orange-500' }}">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                             Tenggat: {{ \Carbon\Carbon::parse($tugas->deadline)->format('d M Y H:i') }}
+                                            @if($remedial)
+                                                <span class="ml-2 inline-block text-[10px] px-2 py-1 rounded bg-yellow-100 text-yellow-800">
+                                                    Remedial sampai {{ \Carbon\Carbon::parse($remedial->deadline)->format('d M Y H:i') }}
+                                                </span>
+                                            @endif
                                         </div>
                                         @if($tugas->file_path)
                                             <a href="{{ Storage::url($tugas->file_path) }}" target="_blank" class="text-xs text-blue-600 hover:underline">File Soal</a>
                                         @endif
                                     </div>
 
-                                    @php
-                                        $submission = $tugas->submissions()->where('student_id', auth()->id())->first();
-                                    @endphp
+                                    @if($remedial && $remedial->note)
+                                        <div class="mb-3 p-3 bg-yellow-50 text-yellow-800 text-xs border border-yellow-100 rounded-lg">
+                                            Catatan remedial: {{ $remedial->note }}
+                                        </div>
+                                    @endif
 
                                     @if($submission)
                                         <div class="p-3 bg-green-50 rounded-lg border border-green-100 flex justify-between items-center">
@@ -113,7 +138,7 @@
                                             <a href="{{ Storage::url($submission->file_path) }}" target="_blank" class="text-xs text-green-600 hover:underline">Lihat Jawaban</a>
                                         </div>
                                     @else
-                                        @if(\Carbon\Carbon::parse($tugas->deadline)->isPast())
+                                        @if($effectivePast)
                                             <div class="p-3 bg-red-50 text-red-600 text-xs font-semibold border border-red-100 rounded-lg text-center">
                                                 Waktu Pengumpulan Telah Habis
                                             </div>

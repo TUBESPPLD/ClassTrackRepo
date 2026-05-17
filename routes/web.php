@@ -35,16 +35,25 @@ Route::middleware(['auth', 'guru'])->prefix('guru')->name('guru.')->group(functi
     Route::put('/kelas/{classroom}', [GuruController::class, 'updateKelas'])->name('kelas.update');
     Route::patch('/kelas/{classroom}/toggle-visibility', [GuruController::class, 'toggleVisibility'])->name('kelas.toggle-visibility');
     Route::delete('/kelas/{classroom}', [GuruController::class, 'deleteKelas'])->name('kelas.delete');
+
     Route::post('/kelas/{classroom}/anggota', [GuruController::class, 'anggotaKelas'])->name('anggota');
     Route::post('/kelas/{classroom}/kelompok', [GuruController::class, 'kelompok'])->name('kelompok');
     Route::post('/kelas/{classroom}/materi', [GuruController::class, 'materi'])->name('materi');
     Route::post('/kelas/{classroom}/pengumuman', [GuruController::class, 'pengumuman'])->name('pengumuman');
+
     Route::match(['get', 'post'], '/kelas/{classroom}/tugas', [GuruController::class, 'tugas'])->name('tugas');
     Route::post('/nilai/{submission}', [GuruController::class, 'nilai'])->name('nilai');
+
     Route::match(['get', 'post'], '/kelas/{classroom}/kuis', [GuruController::class, 'kuis'])->name('kuis');
+
+    Route::get('/kelas/{classroom}/bank-soal', [GuruController::class, 'bankSoal'])->name('bank-soal.index');
+    Route::post('/kelas/{classroom}/bank-soal', [GuruController::class, 'createBankSoal'])->name('bank-soal.create');
+    Route::delete('/kelas/{classroom}/bank-soal/{question}', [GuruController::class, 'deleteBankSoal'])->name('bank-soal.delete');
+
     Route::post('/kelas/{classroom}/presensi', [GuruController::class, 'presensi'])->name('presensi');
     Route::get('/kelas/{classroom}/monitoring', [GuruController::class, 'monitoring'])->name('monitoring');
     Route::post('/kelas/{classroom}/ews', [GuruController::class, 'analisisRisiko'])->name('ews.analisis');
+
     Route::post('/remedial', [GuruController::class, 'remedial'])->name('remedial');
 });
 
