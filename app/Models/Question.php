@@ -9,6 +9,7 @@ class Question extends Model
 {
     protected $fillable = [
         'quiz_id',
+        'question_bank_question_id',
         'question_text',
         'option_a',
         'option_b',
@@ -20,5 +21,10 @@ class Question extends Model
     public function quiz(): BelongsTo
     {
         return $this->belongsTo(Quiz::class);
+    }
+
+    public function bankQuestion(): BelongsTo
+    {
+        return $this->belongsTo(QuestionBankQuestion::class, 'question_bank_question_id');
     }
 }

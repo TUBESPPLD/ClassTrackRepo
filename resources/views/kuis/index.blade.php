@@ -42,7 +42,12 @@
                         <div class="space-y-3 max-h-40 overflow-y-auto pr-2">
                             @foreach($kuis->questions as $index => $q)
                                 <div class="text-sm">
-                                    <p class="font-medium text-gray-800">{{ $index+1 }}. {{ $q->question_text }}</p>
+                                    <p class="font-medium text-gray-800">
+                                        {{ $index+1 }}. {{ $q->question_text }}
+                                        @if($q->question_bank_question_id)
+                                            <span class="ml-2 text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700">Bank Soal</span>
+                                        @endif
+                                    </p>
                                     <ul class="ml-4 mt-1 space-y-1 text-xs text-gray-500">
                                         @foreach(['a','b','c','d'] as $opt)
                                             <li class="{{ $q->correct_answer == $opt ? 'text-green-600 font-semibold' : '' }}">
@@ -118,8 +123,18 @@
                     </div>
                 </div>
 
+                <div class="mb-6">
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Ambil Soal dari Bank Soal (Opsional)</label>
+                    <select name="question_bank_ids[]" multiple class="w-full border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 text-sm">
+                        @foreach(($bankQuestions ?? []) as $qb)
+                            <option value="{{ $qb->id }}">#{{ $qb->id }} — {{ \Illuminate\Support\Str::limit($qb->question_text, 80) }}</option>
+                        @endforeach
+                    </select>
+                    <p class="text-xs text-gray-500 mt-1">Soal yang dipilih akan disalin ke kuis sebagai referensi dari bank soal.</p>
+                </div>
+
                 <div class="mb-4">
-                    <h4 class="font-semibold text-gray-800 border-b pb-2">Daftar Pertanyaan</h4>
+                    <h4 class="font-semibold text-gray-800 border-b pb-2">Daftar Pertanyaan (Manual)</h4>
                 </div>
 
                 <div class="space-y-6 max-h-96 overflow-y-auto pr-2">

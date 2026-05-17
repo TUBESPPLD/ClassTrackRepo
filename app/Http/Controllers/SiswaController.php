@@ -7,6 +7,7 @@ use App\Models\Classroom;
 use App\Models\Question;
 use App\Models\Quiz;
 use App\Models\QuizAttempt;
+use App\Models\RemedialTask;
 use App\Models\Submission;
 use Illuminate\Http\Request;
 
@@ -38,17 +39,38 @@ class SiswaController extends Controller
     {
         abort_unless($classroom->members->contains(auth()->id()), 403);
         abort_if($classroom->is_hidden, 404, 'Kelas sedang disembunyikan.');
-        $classroom->load(['materials', 'announcements', 'assignments', 'quizzes']);
-        return view('kelas.show-siswa', compact('classroom'));
+
+        $classroom->load(['materials', 'announcements', 'assignments.questionBankReferences', 'quizzes']);
+
+        $remedials = RemedialTask::where('student_id', auth()->id())
+            ->where('class_id', $classroom->id)
+            ->where('status', 'assigned')
+            ->get()
+            ->keyBy('assignment_id');
+
+        return view('kelas.show-siswa', compact('classroom', 'remedials'));
     }
 
     public function submissionTugas(Request $request, Assignment $assignment)
     {
         $request->validate(['file' => 'required|file|max:4096']);
+
+        $assignment->loadMissing('classroom.members');
+        abort_unless($assignment->classroom->members->contains(auth()->id()), 403);
+
         $submittedAt = now();
-        
+
+        $remedial = null;
         if ($submittedAt->gt($assignment->deadline)) {
-            return back()->withErrors(['file' => 'Gagal mengumpulkan: Batas waktu tugas sudah terlewat.']);
+            $remedial = RemedialTask::where('student_id', auth()->id())
+                ->where('assignment_id', $assignment->id)
+                ->whereIn('status', ['assigned', 'completed'])
+                ->orderByDesc('deadline')
+                ->first();
+
+            if (!$remedial || $submittedAt->gt($remedial->deadline)) {
+                return back()->withErrors(['file' => 'Gagal mengumpulkan: Batas waktu tugas sudah terlewat.']);
+            }
         }
 
         Submission::updateOrCreate(
@@ -56,10 +78,15 @@ class SiswaController extends Controller
             [
                 'file_path' => $request->file('file')->store('submissions', 'public'),
                 'submitted_at' => $submittedAt,
-                'status' => 'TEPAT_WAKTU',
+                'status' => $remedial ? 'REMEDIAL' : 'TEPAT_WAKTU',
             ]
         );
-        return back()->with('success', 'Tugas dikumpulkan.');
+
+        if ($remedial && $remedial->status === 'assigned') {
+            $remedial->update(['status' => 'completed']);
+        }
+
+        return back()->with('success', $remedial ? 'Tugas dikumpulkan (remedial).' : 'Tugas dikumpulkan.');
     }
 
     public function kerjakanKuis(Request $request, Quiz $quiz)

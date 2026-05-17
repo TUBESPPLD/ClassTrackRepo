@@ -203,16 +203,28 @@
 
             <form method="POST" action="{{ route('guru.remedial') }}" x-data="{ submitting: false }" @submit="submitting = true">
                 @csrf
+                <input type="hidden" name="class_id" value="{{ $classroom->id }}">
                 <input type="hidden" name="student_id" id="remedial-student-id">
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">Pilih Tugas Asli (Opsional)</label>
-                        <select name="assignment_id" class="w-full border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 text-sm">
-                            <option value="">-- Hanya Remedial Umum --</option>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">Program Remedial (Pilih Tugas yang Diperpanjang)</label>
+                        <div class="max-h-40 overflow-y-auto space-y-2 p-3 bg-gray-50 border border-gray-200 rounded-xl">
                             @foreach($classroom->assignments as $assignment)
-                                <option value="{{ $assignment->id }}">{{ $assignment->title }}</option>
+                                <label class="flex items-start gap-2 text-sm text-gray-700">
+                                    <input type="checkbox" name="assignment_ids[]" value="{{ $assignment->id }}" class="mt-1">
+                                    <span class="leading-snug">{{ $assignment->title }}</span>
+                                </label>
                             @endforeach
-                        </select>
+                            @if($classroom->assignments->count() === 0)
+                                <p class="text-xs text-gray-500">Belum ada tugas di kelas ini.</p>
+                            @endif
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Jika tidak memilih tugas, sistem akan membuat remedial umum (tanpa perpanjangan deadline tugas tertentu).</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">Catatan Program (Opsional)</label>
+                        <textarea name="note" rows="3" class="w-full border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 text-sm" placeholder="Contoh: kerjakan ulang latihan pecahan + kumpulkan ulang tugas..."></textarea>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-1.5">Batas Waktu (Deadline)</label>
