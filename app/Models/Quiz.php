@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Quiz extends Model
 {
-    protected $fillable = ['title', 'duration_minutes', 'segment', 'class_id', 'created_by'];
+    protected $fillable = ['title', 'duration_minutes', 'deadline', 'segment', 'class_id', 'created_by'];
 
+    protected $casts = [
+        'deadline' => 'datetime',
+    ];
     public function classroom(): BelongsTo
     {
         return $this->belongsTo(Classroom::class, 'class_id');

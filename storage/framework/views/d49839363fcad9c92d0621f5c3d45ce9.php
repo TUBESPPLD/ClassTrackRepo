@@ -31,14 +31,15 @@
 
         <!-- Form Card -->
         <div class="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8 border border-gray-100">
-            @if($errors->any())
+            <?php if($errors->any()): ?>
                 <div class="mb-6 p-4 rounded-xl bg-red-50 text-red-700 text-sm font-medium border border-red-100">
-                    {{ $errors->first() }}
-                </div>
-            @endif
+                    <?php echo e($errors->first()); ?>
 
-            <form method="POST" action="{{ route('register.post') }}" class="space-y-4">
-                @csrf
+                </div>
+            <?php endif; ?>
+
+            <form method="POST" action="<?php echo e(route('register.post')); ?>" class="space-y-4">
+                <?php echo csrf_field(); ?>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">Nama Lengkap</label>
                     <input name="name" type="text" placeholder="Budi Santoso" class="w-full border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all bg-gray-50/50 hover:bg-white" required>
@@ -78,10 +79,10 @@
             <div class="mt-8 text-center">
                 <p class="text-sm text-gray-600">
                     Sudah punya akun? 
-                    <a href="{{ route('login') }}" class="font-semibold text-blue-600 hover:text-blue-700 transition-colors">Masuk di sini</a>
+                    <a href="<?php echo e(route('login')); ?>" class="font-semibold text-blue-600 hover:text-blue-700 transition-colors">Masuk di sini</a>
                 </p>
                 <div class="mt-4">
-                    <a href="{{ url('/') }}" class="text-sm text-gray-400 hover:text-gray-600">&larr; Kembali ke Beranda</a>
+                    <a href="<?php echo e(url('/')); ?>" class="text-sm text-gray-400 hover:text-gray-600">&larr; Kembali ke Beranda</a>
                 </div>
             </div>
         </div>
@@ -103,3 +104,4 @@
     </script>
 </body>
 </html>
+<?php /**PATH C:\Users\user\ClassTrackRepo\resources\views/register.blade.php ENDPATH**/ ?>

@@ -11,6 +11,7 @@ class Question extends Model
         'quiz_id',
         'question_bank_question_id',
         'question_text',
+        'image_path',
         'option_a',
         'option_b',
         'option_c',

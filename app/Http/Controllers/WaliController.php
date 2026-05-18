@@ -60,19 +60,6 @@ class WaliController extends Controller
                 'missedAssignments' => $missedAssignments,
                 'attendanceData' => [$hadir, $sakit, $izin, $alpa]
             ];
-        $students = auth()->user()->students;
-        $reports = [];
-
-        foreach ($students as $student) {
-            $nilaiTugas = Submission::where('student_id', $student->id)->avg('grade') ?? 0;
-            $nilaiKuis = QuizAttempt::where('student_id', $student->id)->avg('score') ?? 0;
-            $avgNilai = round(($nilaiTugas + $nilaiKuis) / 2, 2);
-
-            $total = Attendance::where('student_id', $student->id)->count();
-            $hadir = Attendance::where('student_id', $student->id)->where('status', 'hadir')->count();
-            $presensi = $total > 0 ? round(($hadir / $total) * 100, 2) : 0;
-
-            $reports[] = compact('student', 'avgNilai', 'presensi');
         }
 
         return view('dashboard-wali', compact('reports'));
@@ -80,12 +67,12 @@ class WaliController extends Controller
 
     public function linkStudent(\Illuminate\Http\Request $request)
     {
-        $request->validate(['email' => 'required|email']);
+        $request->validate(['student_code' => 'required|string']);
         
-        $student = \App\Models\User::where('email', $request->email)->where('role', 'siswa')->first();
+        $student = \App\Models\User::where('student_code', $request->student_code)->where('role', 'siswa')->first();
         
         if (!$student) {
-            return back()->with('error', 'Akun siswa dengan email tersebut tidak ditemukan.');
+            return back()->with('error', 'Akun siswa dengan ID tersebut tidak ditemukan.');
         }
 
         // Tautkan relasi

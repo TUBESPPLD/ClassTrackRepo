@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
+<html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>" class="scroll-smooth">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -47,14 +47,14 @@
                         <a href="#features" class="text-gray-600 hover:text-blue-600 font-medium transition-colors hover:-translate-y-0.5 transform">Fitur</a>
                         <a href="#about" class="text-gray-600 hover:text-blue-600 font-medium transition-colors hover:-translate-y-0.5 transform">Tentang</a>
                         <div class="flex items-center space-x-4">
-                            @auth
-                                <a href="{{ url('/dashboard') }}" class="px-6 py-2.5 rounded-xl bg-blue-50 text-blue-600 font-semibold hover:bg-blue-100 transition-all transform hover:scale-105">Dashboard Saya</a>
-                            @else
-                                <a href="{{ route('login') }}" class="px-6 py-2.5 font-medium text-gray-600 hover:text-blue-600 transition-colors">Log in</a>
-                                @if (Route::has('register'))
-                                    <a href="{{ route('register') }}" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold hover:shadow-lg hover:shadow-blue-500/30 transition-all transform hover:-translate-y-0.5 hover:scale-105">Daftar Sekarang</a>
-                                @endif
-                            @endauth
+                            <?php if(auth()->guard()->check()): ?>
+                                <a href="<?php echo e(url('/dashboard')); ?>" class="px-6 py-2.5 rounded-xl bg-blue-50 text-blue-600 font-semibold hover:bg-blue-100 transition-all transform hover:scale-105">Dashboard Saya</a>
+                            <?php else: ?>
+                                <a href="<?php echo e(route('login')); ?>" class="px-6 py-2.5 font-medium text-gray-600 hover:text-blue-600 transition-colors">Log in</a>
+                                <?php if(Route::has('register')): ?>
+                                    <a href="<?php echo e(route('register')); ?>" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold hover:shadow-lg hover:shadow-blue-500/30 transition-all transform hover:-translate-y-0.5 hover:scale-105">Daftar Sekarang</a>
+                                <?php endif; ?>
+                            <?php endif; ?>
                         </div>
                     </div>
 
@@ -75,14 +75,14 @@
                     <a href="#features" @click="mobileMenuOpen = false" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md">Fitur</a>
                     <a href="#about" @click="mobileMenuOpen = false" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md">Tentang</a>
                     <div class="border-t border-gray-100 pt-4 mt-2">
-                        @auth
-                            <a href="{{ url('/dashboard') }}" class="block w-full text-center px-4 py-3 rounded-xl bg-blue-600 text-white font-bold">Dashboard</a>
-                        @else
-                            <a href="{{ route('login') }}" class="block w-full text-center px-4 py-2 font-medium text-gray-600">Log in</a>
-                            @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="mt-2 block w-full text-center px-4 py-3 rounded-xl bg-blue-600 text-white font-bold">Daftar Sekarang</a>
-                            @endif
-                        @endauth
+                        <?php if(auth()->guard()->check()): ?>
+                            <a href="<?php echo e(url('/dashboard')); ?>" class="block w-full text-center px-4 py-3 rounded-xl bg-blue-600 text-white font-bold">Dashboard</a>
+                        <?php else: ?>
+                            <a href="<?php echo e(route('login')); ?>" class="block w-full text-center px-4 py-2 font-medium text-gray-600">Log in</a>
+                            <?php if(Route::has('register')): ?>
+                                <a href="<?php echo e(route('register')); ?>" class="mt-2 block w-full text-center px-4 py-3 rounded-xl bg-blue-600 text-white font-bold">Daftar Sekarang</a>
+                            <?php endif; ?>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -122,16 +122,16 @@
                         </p>
                         
                         <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center">
-                            @auth
-                                <a href="{{ url('/dashboard') }}" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-lg hover:shadow-xl hover:shadow-blue-500/40 transition-all transform hover:-translate-y-1">
+                            <?php if(auth()->guard()->check()): ?>
+                                <a href="<?php echo e(url('/dashboard')); ?>" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-lg hover:shadow-xl hover:shadow-blue-500/40 transition-all transform hover:-translate-y-1">
                                     Buka Dashboard
                                 </a>
-                            @else
+                            <?php else: ?>
                                 <a href="#login-roles" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-lg hover:shadow-xl hover:shadow-blue-500/40 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2 group">
                                     Masuk Portal
                                     <svg class="w-5 h-5 group-hover:translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
                                 </a>
-                            @endauth
+                            <?php endif; ?>
                         </div>
                     </div>
 
@@ -178,7 +178,7 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     <!-- Siswa -->
-                    <a href="{{ route('login') }}?role=siswa" class="bg-white rounded-3xl p-6 border border-gray-100 hover:border-blue-200 shadow-sm hover:shadow-xl hover:shadow-blue-100 transition-all duration-300 hover:-translate-y-2 group text-center block">
+                    <a href="<?php echo e(route('login')); ?>?role=siswa" class="bg-white rounded-3xl p-6 border border-gray-100 hover:border-blue-200 shadow-sm hover:shadow-xl hover:shadow-blue-100 transition-all duration-300 hover:-translate-y-2 group text-center block">
                         <div class="w-20 h-20 mx-auto rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all">
                             <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"></path></svg>
                         </div>
@@ -187,7 +187,7 @@
                     </a>
 
                     <!-- Guru -->
-                    <a href="{{ route('login') }}?role=guru" class="bg-white rounded-3xl p-6 border border-gray-100 hover:border-indigo-200 shadow-sm hover:shadow-xl hover:shadow-indigo-100 transition-all duration-300 hover:-translate-y-2 group text-center block">
+                    <a href="<?php echo e(route('login')); ?>?role=guru" class="bg-white rounded-3xl p-6 border border-gray-100 hover:border-indigo-200 shadow-sm hover:shadow-xl hover:shadow-indigo-100 transition-all duration-300 hover:-translate-y-2 group text-center block">
                         <div class="w-20 h-20 mx-auto rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white transition-all">
                             <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                         </div>
@@ -196,7 +196,7 @@
                     </a>
 
                     <!-- Wali Murid -->
-                    <a href="{{ route('login') }}?role=wali" class="bg-white rounded-3xl p-6 border border-gray-100 hover:border-purple-200 shadow-sm hover:shadow-xl hover:shadow-purple-100 transition-all duration-300 hover:-translate-y-2 group text-center block">
+                    <a href="<?php echo e(route('login')); ?>?role=wali" class="bg-white rounded-3xl p-6 border border-gray-100 hover:border-purple-200 shadow-sm hover:shadow-xl hover:shadow-purple-100 transition-all duration-300 hover:-translate-y-2 group text-center block">
                         <div class="w-20 h-20 mx-auto rounded-full bg-purple-50 text-purple-600 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-purple-600 group-hover:text-white transition-all">
                             <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                         </div>
@@ -205,7 +205,7 @@
                     </a>
 
                     <!-- Admin -->
-                    <a href="{{ route('login') }}?role=admin" class="bg-white rounded-3xl p-6 border border-gray-100 hover:border-orange-200 shadow-sm hover:shadow-xl hover:shadow-orange-100 transition-all duration-300 hover:-translate-y-2 group text-center block">
+                    <a href="<?php echo e(route('login')); ?>?role=admin" class="bg-white rounded-3xl p-6 border border-gray-100 hover:border-orange-200 shadow-sm hover:shadow-xl hover:shadow-orange-100 transition-all duration-300 hover:-translate-y-2 group text-center block">
                         <div class="w-20 h-20 mx-auto rounded-full bg-orange-50 text-orange-600 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-orange-600 group-hover:text-white transition-all">
                             <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                         </div>
@@ -275,7 +275,7 @@
                     <span class="text-xl font-bold text-white font-outfit">SMA Bina Nusantara</span>
                 </div>
                 <p class="text-sm">
-                    &copy; {{ date('Y') }} Portal Akademik. Developed for Internal School Use.
+                    &copy; <?php echo e(date('Y')); ?> Portal Akademik. Developed for Internal School Use.
                 </p>
             </div>
         </footer>
@@ -297,3 +297,4 @@
     </script>
 </body>
 </html>
+<?php /**PATH C:\Users\user\ClassTrackRepo\resources\views/welcome.blade.php ENDPATH**/ ?>

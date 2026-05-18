@@ -13,7 +13,7 @@
     </style>
 </head>
 <body class="bg-[#f4f7fb] min-h-screen flex items-center justify-center p-4">
-    @php
+    <?php
         $role = request()->query('role', 'siswa');
         $roleNames = [
             'siswa' => 'Siswa',
@@ -22,7 +22,7 @@
             'admin' => 'Admin'
         ];
         $selectedRoleName = $roleNames[$role] ?? 'Siswa';
-    @endphp
+    ?>
 
     <!-- Decorative background elements -->
     <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
@@ -36,7 +36,7 @@
             <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 shadow-lg shadow-blue-500/30 mb-4">
                 <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"></path></svg>
             </div>
-            <h2 class="text-3xl font-bold text-gray-900 font-outfit">Portal {{ $selectedRoleName }}</h2>
+            <h2 class="text-3xl font-bold text-gray-900 font-outfit">Portal <?php echo e($selectedRoleName); ?></h2>
             <p class="text-gray-500 mt-2">Masuk ke sistem akademik SMA Bina Nusantara</p>
         </div>
 
@@ -44,26 +44,29 @@
         <div class="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8 border border-gray-100">
             <!-- Role Tabs -->
             <div class="flex bg-gray-50 p-1 rounded-xl mb-6 overflow-x-auto hide-scrollbar">
-                @foreach($roleNames as $key => $name)
-                    <a href="{{ route('login') }}?role={{ $key }}" class="flex-1 text-center py-2 text-sm font-semibold rounded-lg transition-all whitespace-nowrap px-3 {{ $role === $key ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700' }}">
-                        {{ $name }}
+                <?php $__currentLoopData = $roleNames; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $name): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <a href="<?php echo e(route('login')); ?>?role=<?php echo e($key); ?>" class="flex-1 text-center py-2 text-sm font-semibold rounded-lg transition-all whitespace-nowrap px-3 <?php echo e($role === $key ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'); ?>">
+                        <?php echo e($name); ?>
+
                     </a>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
 
-            @if(session('success'))
+            <?php if(session('success')): ?>
                 <div class="mb-6 p-4 rounded-xl bg-green-50 text-green-700 text-sm font-medium border border-green-100">
-                    {{ session('success') }}
-                </div>
-            @endif
-            @if($errors->any())
-                <div class="mb-6 p-4 rounded-xl bg-red-50 text-red-700 text-sm font-medium border border-red-100">
-                    {{ $errors->first() }}
-                </div>
-            @endif
+                    <?php echo e(session('success')); ?>
 
-            <form method="POST" action="{{ route('login.post') }}" class="space-y-5" x-data="{ submitting: false }" @submit="submitting = true">
-                @csrf
+                </div>
+            <?php endif; ?>
+            <?php if($errors->any()): ?>
+                <div class="mb-6 p-4 rounded-xl bg-red-50 text-red-700 text-sm font-medium border border-red-100">
+                    <?php echo e($errors->first()); ?>
+
+                </div>
+            <?php endif; ?>
+
+            <form method="POST" action="<?php echo e(route('login.post')); ?>" class="space-y-5" x-data="{ submitting: false }" @submit="submitting = true">
+                <?php echo csrf_field(); ?>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
                     <input name="email" type="email" placeholder="contoh@sekolah.com" class="w-full border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all bg-gray-50/50 hover:bg-white" required autofocus>
@@ -104,13 +107,14 @@
             <div class="mt-8 text-center">
                 <p class="text-sm text-gray-600">
                     Belum punya akun? 
-                    <a href="{{ route('register') }}" class="font-semibold text-blue-600 hover:text-blue-700 transition-colors">Daftar sekarang</a>
+                    <a href="<?php echo e(route('register')); ?>" class="font-semibold text-blue-600 hover:text-blue-700 transition-colors">Daftar sekarang</a>
                 </p>
                 <div class="mt-4">
-                    <a href="{{ url('/') }}" class="text-sm text-gray-400 hover:text-gray-600">&larr; Kembali ke Beranda</a>
+                    <a href="<?php echo e(url('/')); ?>" class="text-sm text-gray-400 hover:text-gray-600">&larr; Kembali ke Beranda</a>
                 </div>
             </div>
         </div>
     </div>
 </body>
 </html>
+<?php /**PATH C:\Users\user\ClassTrackRepo\resources\views/login.blade.php ENDPATH**/ ?>
