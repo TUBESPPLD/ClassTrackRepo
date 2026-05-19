@@ -148,7 +148,6 @@
                         </div>
                         
 
-
                         <!-- Secondary Image -->
                         <div class="absolute right-40 bottom-0 w-48 h-48 rounded-3xl overflow-hidden shadow-xl border-4 border-white floating-img-2 z-10 opacity-90">
                             <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Teacher" class="w-full h-full object-cover">
