@@ -1,4 +1,13 @@
-<x-layouts.app :title="'Kelola Kelas'">
+<?php if (isset($component)) { $__componentOriginal5863877a5171c196453bfa0bd807e410 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal5863877a5171c196453bfa0bd807e410 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.layouts.app','data' => ['title' => 'Kelola Kelas']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('layouts.app'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['title' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute('Kelola Kelas')]); ?>
     <div class="mb-6 flex justify-between items-center">
         <div>
             <h1 class="text-2xl font-bold text-gray-800">Daftar Kelas</h1>
@@ -11,20 +20,21 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        @forelse(($classes ?? []) as $class)
-            <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all group relative flex flex-col {{ $class->is_hidden ? 'opacity-75 grayscale-[20%]' : '' }}">
+        <?php $__empty_1 = true; $__currentLoopData = ($classes ?? []); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $class): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+            <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all group relative flex flex-col <?php echo e($class->is_hidden ? 'opacity-75 grayscale-[20%]' : ''); ?>">
                 <div class="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-bl-full -z-10 group-hover:scale-110 transition-transform"></div>
                 
                 <div class="flex items-start justify-between mb-4">
-                    @if($class->cover_image)
+                    <?php if($class->cover_image): ?>
                         <div class="w-14 h-14 rounded-2xl bg-gray-100 flex items-center justify-center border-2 border-white shadow-sm overflow-hidden shrink-0">
-                            <img src="{{ str_starts_with($class->cover_image, 'http') ? $class->cover_image : Storage::url($class->cover_image) }}" class="w-full h-full object-cover">
+                            <img src="<?php echo e(str_starts_with($class->cover_image, 'http') ? $class->cover_image : Storage::url($class->cover_image)); ?>" class="w-full h-full object-cover">
                         </div>
-                    @else
+                    <?php else: ?>
                         <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-100 to-indigo-100 text-blue-600 flex items-center justify-center font-bold text-xl border-2 border-white shadow-sm shrink-0">
-                            {{ strtoupper(substr($class->name, 0, 1)) }}
+                            <?php echo e(strtoupper(substr($class->name, 0, 1))); ?>
+
                         </div>
-                    @endif
+                    <?php endif; ?>
                     
                     <!-- Dropdown Actions -->
                     <div x-data="{ open: false }" class="relative">
@@ -32,17 +42,18 @@
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
                         </button>
                         <div x-show="open" class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-1 z-10" x-transition>
-                            <button @click="open = false; $dispatch('open-edit-modal', { id: {{ $class->id }}, name: '{{ addslashes($class->name) }}', description: '{{ addslashes($class->description) }}', cover_image: '{{ addslashes($class->cover_image) }}' })" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Edit Kelas</button>
+                            <button @click="open = false; $dispatch('open-edit-modal', { id: <?php echo e($class->id); ?>, name: '<?php echo e(addslashes($class->name)); ?>', description: '<?php echo e(addslashes($class->description)); ?>', cover_image: '<?php echo e(addslashes($class->cover_image)); ?>' })" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Edit Kelas</button>
                             
-                            <form method="POST" action="{{ route('guru.kelas.toggle-visibility', $class) }}">
-                                @csrf @method('PATCH')
+                            <form method="POST" action="<?php echo e(route('guru.kelas.toggle-visibility', $class)); ?>">
+                                <?php echo csrf_field(); ?> <?php echo method_field('PATCH'); ?>
                                 <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                                    {{ $class->is_hidden ? 'Tampilkan Kelas' : 'Sembunyikan Kelas' }}
+                                    <?php echo e($class->is_hidden ? 'Tampilkan Kelas' : 'Sembunyikan Kelas'); ?>
+
                                 </button>
                             </form>
 
-                            <form method="POST" action="{{ route('guru.kelas.delete', $class) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kelas ini beserta seluruh datanya?');">
-                                @csrf @method('DELETE')
+                            <form method="POST" action="<?php echo e(route('guru.kelas.delete', $class)); ?>" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kelas ini beserta seluruh datanya?');">
+                                <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
                                 <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">Hapus Kelas</button>
                             </form>
                         </div>
@@ -51,23 +62,23 @@
 
                 <div class="mb-4">
                     <div class="flex items-center gap-2 mb-1">
-                        <h3 class="text-xl font-bold text-gray-900 line-clamp-1" title="{{ $class->name }}">{{ $class->name }}</h3>
-                        @if($class->is_hidden)
+                        <h3 class="text-xl font-bold text-gray-900 line-clamp-1" title="<?php echo e($class->name); ?>"><?php echo e($class->name); ?></h3>
+                        <?php if($class->is_hidden): ?>
                             <span class="px-2 py-0.5 text-[10px] font-bold bg-gray-100 text-gray-500 rounded-md uppercase tracking-wider">Hidden</span>
-                        @endif
+                        <?php endif; ?>
                     </div>
-                    <p class="text-xs font-mono bg-gray-100 text-gray-600 px-2 py-1 rounded inline-block mb-3">Kode: {{ $class->class_code }}</p>
-                    <p class="text-sm text-gray-500 line-clamp-2 h-10">{{ $class->description ?: 'Tidak ada deskripsi.' }}</p>
+                    <p class="text-xs font-mono bg-gray-100 text-gray-600 px-2 py-1 rounded inline-block mb-3">Kode: <?php echo e($class->class_code); ?></p>
+                    <p class="text-sm text-gray-500 line-clamp-2 h-10"><?php echo e($class->description ?: 'Tidak ada deskripsi.'); ?></p>
                 </div>
 
                 <div class="mt-auto pt-4 border-t border-gray-50">
-                    <a href="{{ route('guru.kelas.show', $class) }}" class="w-full flex items-center justify-center gap-2 py-2.5 bg-blue-50 text-blue-600 font-medium rounded-xl hover:bg-blue-600 hover:text-white transition-colors">
+                    <a href="<?php echo e(route('guru.kelas.show', $class)); ?>" class="w-full flex items-center justify-center gap-2 py-2.5 bg-blue-50 text-blue-600 font-medium rounded-xl hover:bg-blue-600 hover:text-white transition-colors">
                         Buka Ruang Kelas
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                     </a>
                 </div>
             </div>
-        @empty
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
             <div class="col-span-full bg-white rounded-3xl p-12 border border-dashed border-blue-200 text-center flex flex-col items-center justify-center">
                 <div class="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mb-4">
                     <svg class="w-10 h-10 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
@@ -78,7 +89,7 @@
                     Buat Kelas Pertama
                 </button>
             </div>
-        @endforelse
+        <?php endif; ?>
     </div>
 
     <!-- Modal Create Kelas -->
@@ -95,8 +106,8 @@
                 <p class="text-sm text-gray-500 mt-1">Isi detail kelas yang akan Anda buat.</p>
             </div>
 
-            <form method="POST" action="{{ route('guru.kelas') }}" enctype="multipart/form-data" x-data="{ submitting: false }" @submit="submitting = true">
-                @csrf
+            <form method="POST" action="<?php echo e(route('guru.kelas')); ?>" enctype="multipart/form-data" x-data="{ submitting: false }" @submit="submitting = true">
+                <?php echo csrf_field(); ?>
                 <div class="space-y-5">
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-1.5">Nama Kelas <span class="text-red-500">*</span></label>
@@ -143,8 +154,8 @@
             </div>
 
             <form method="POST" :action="`/guru/kelas/${id}`" enctype="multipart/form-data" x-data="{ submitting: false }" @submit="submitting = true">
-                @csrf
-                @method('PUT')
+                <?php echo csrf_field(); ?>
+                <?php echo method_field('PUT'); ?>
                 <div class="space-y-5">
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-1.5">Nama Kelas <span class="text-red-500">*</span></label>
@@ -172,4 +183,14 @@
             </form>
         </div>
     </div>
-</x-layouts.app>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal5863877a5171c196453bfa0bd807e410)): ?>
+<?php $attributes = $__attributesOriginal5863877a5171c196453bfa0bd807e410; ?>
+<?php unset($__attributesOriginal5863877a5171c196453bfa0bd807e410); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal5863877a5171c196453bfa0bd807e410)): ?>
+<?php $component = $__componentOriginal5863877a5171c196453bfa0bd807e410; ?>
+<?php unset($__componentOriginal5863877a5171c196453bfa0bd807e410); ?>
+<?php endif; ?>
+<?php /**PATH C:\Users\user\ClassTrackRepo\resources\views/kelas/index.blade.php ENDPATH**/ ?>

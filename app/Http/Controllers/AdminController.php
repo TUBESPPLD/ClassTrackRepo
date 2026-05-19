@@ -34,6 +34,19 @@ class AdminController extends Controller
             'role' => 'required|in:admin,guru,siswa,wali',
         ]);
         $data['password'] = Hash::make($data['password']);
+
+        if ($data['role'] === 'siswa') {
+            do {
+                $studentCode = (string) random_int(1000000000, 9999999999);
+            } while (User::where('student_code', $studentCode)->exists());
+            $data['student_code'] = $studentCode;
+        } elseif ($data['role'] === 'guru') {
+            do {
+                $studentCode = (string) random_int(100000, 999999);
+            } while (User::where('student_code', $studentCode)->exists());
+            $data['student_code'] = $studentCode;
+        }
+
         User::create($data);
 
         return back()->with('success', 'User ditambahkan.');

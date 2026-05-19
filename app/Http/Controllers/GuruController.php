@@ -36,10 +36,21 @@ class GuruController extends Controller
             $data = $request->validate([
                 'name' => 'required', 
                 'description' => 'nullable',
-                'cover_image' => 'nullable|url'
+                'cover_image_url' => 'nullable|url',
+                'cover_image_file' => 'nullable|image|max:4096'
             ]);
+
+            $coverImage = null;
+            if ($request->hasFile('cover_image_file')) {
+                $coverImage = $request->file('cover_image_file')->store('covers', 'public');
+            } elseif (!empty($data['cover_image_url'])) {
+                $coverImage = $data['cover_image_url'];
+            }
+
             Classroom::create([
-                ...$data,
+                'name' => $data['name'],
+                'description' => $data['description'] ?? null,
+                'cover_image' => $coverImage,
                 'class_code' => 'CLS-' . strtoupper(Str::random(6)),
                 'created_by' => auth()->id(),
             ]);
@@ -59,11 +70,31 @@ class GuruController extends Controller
     public function updateKelas(Request $request, Classroom $classroom)
     {
         abort_if($classroom->created_by !== auth()->id(), 403);
-        $classroom->update($request->validate([
+        $data = $request->validate([
             'name' => 'required', 
             'description' => 'nullable',
-            'cover_image' => 'nullable|url'
-        ]));
+            'cover_image_url' => 'nullable|url',
+            'cover_image_file' => 'nullable|image|max:4096'
+        ]);
+
+        $coverImage = $classroom->cover_image;
+        if ($request->hasFile('cover_image_file')) {
+            if ($coverImage && !str_starts_with($coverImage, 'http')) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($coverImage);
+            }
+            $coverImage = $request->file('cover_image_file')->store('covers', 'public');
+        } elseif ($request->filled('cover_image_url')) {
+            if ($coverImage && !str_starts_with($coverImage, 'http')) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($coverImage);
+            }
+            $coverImage = $data['cover_image_url'];
+        }
+
+        $classroom->update([
+            'name' => $data['name'],
+            'description' => $data['description'] ?? null,
+            'cover_image' => $coverImage
+        ]);
         return back()->with('success', 'Kelas diperbarui.');
     }
 
@@ -139,11 +170,70 @@ class GuruController extends Controller
         return back()->with('success', 'Materi diunggah.');
     }
 
+    public function updateMateri(Request $request, Material $material)
+    {
+        $classroom = Classroom::findOrFail($material->class_id);
+        abort_if($classroom->created_by !== auth()->id(), 403);
+
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'segment' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'link_url' => 'nullable|url',
+            'file' => 'nullable|mimes:pdf,doc,docx|max:4096',
+        ]);
+
+        if ($request->hasFile('file')) {
+            if ($material->file_path) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($material->file_path);
+            }
+            $data['file_path'] = $request->file('file')->store('materials', 'public');
+        }
+
+        $material->update([
+            'title' => $data['title'],
+            'segment' => $data['segment'] ?? null,
+            'description' => $data['description'] ?? null,
+            'link_url' => $data['link_url'] ?? null,
+            'file_path' => $data['file_path'] ?? $material->file_path,
+        ]);
+
+        return back()->with('success', 'Materi diperbarui.');
+    }
+
+    public function deleteMateri(Material $material)
+    {
+        $classroom = Classroom::findOrFail($material->class_id);
+        abort_if($classroom->created_by !== auth()->id(), 403);
+
+        if ($material->file_path) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($material->file_path);
+        }
+
+        $material->delete();
+        return back()->with('success', 'Materi dihapus.');
+    }
+
     public function pengumuman(Request $request, Classroom $classroom)
     {
         $data = $request->validate(['title' => 'required', 'content' => 'required']);
         Announcement::create([...$data, 'class_id' => $classroom->id, 'created_by' => auth()->id()]);
         return back()->with('success', 'Pengumuman dibuat.');
+    }
+
+    public function updatePengumuman(Request $request, Classroom $classroom, Announcement $announcement)
+    {
+        abort_if($classroom->created_by !== auth()->id() || $announcement->class_id !== $classroom->id, 403);
+        $data = $request->validate(['title' => 'required', 'content' => 'required']);
+        $announcement->update($data);
+        return back()->with('success', 'Pengumuman diperbarui.');
+    }
+
+    public function deletePengumuman(Classroom $classroom, Announcement $announcement)
+    {
+        abort_if($classroom->created_by !== auth()->id() || $announcement->class_id !== $classroom->id, 403);
+        $announcement->delete();
+        return back()->with('success', 'Pengumuman dihapus.');
     }
 
     public function tugas(Request $request, Classroom $classroom)
@@ -214,6 +304,41 @@ class GuruController extends Controller
         return back()->with('success', 'Nilai disimpan.');
     }
 
+    public function anggota(Request $request, Classroom $classroom)
+    {
+        abort_if($classroom->created_by !== auth()->id(), 403);
+        if ($request->has('remove_student_id')) {
+            $classroom->members()->detach($request->remove_student_id);
+            return back()->with('success', 'Siswa dihapus dari kelas.');
+        }
+
+        $student = User::where('role', 'siswa')->find($request->student_id);
+        if ($student) {
+            $classroom->members()->syncWithoutDetaching([$student->id]);
+            return back()->with('success', 'Siswa berhasil ditambahkan.');
+        }
+
+        return back()->withErrors(['student_id' => 'Siswa tidak ditemukan.']);
+    }
+
+    public function searchStudents(Request $request)
+    {
+        $term = $request->query('q');
+        if (!$term) {
+            return response()->json([]);
+        }
+
+        $students = User::where('role', 'siswa')
+            ->where(function($q) use ($term) {
+                $q->where('student_code', 'like', "%{$term}%")
+                  ->orWhere('name', 'like', "%{$term}%");
+            })
+            ->take(5)
+            ->get(['id', 'name', 'student_code']);
+            
+        return response()->json($students);
+    }
+
     public function kuis(Request $request, Classroom $classroom)
     {
         abort_if($classroom->created_by !== auth()->id(), 403);
@@ -223,6 +348,7 @@ class GuruController extends Controller
                 'title' => 'required',
                 'segment' => 'nullable|string',
                 'duration_minutes' => 'required|integer|min:1',
+                'deadline' => 'required|date',
                 'question_bank_ids' => 'nullable|array',
                 'question_bank_ids.*' => 'integer|exists:question_bank_questions,id',
             ]);
@@ -249,13 +375,19 @@ class GuruController extends Controller
                 }
             }
 
-            foreach ($request->input('questions', []) as $row) {
+            foreach ($request->input('questions', []) as $index => $row) {
                 $questionText = trim((string) ($row['question'] ?? ''));
                 if ($questionText === '') continue;
+
+                $imagePath = null;
+                if ($request->hasFile("questions.{$index}.image")) {
+                    $imagePath = $request->file("questions.{$index}.image")->store('questions', 'public');
+                }
 
                 Question::create([
                     'quiz_id' => $quiz->id,
                     'question_text' => $questionText,
+                    'image_path' => $imagePath,
                     'option_a' => $row['options']['a'] ?? '',
                     'option_b' => $row['options']['b'] ?? '',
                     'option_c' => $row['options']['c'] ?? '',
@@ -504,5 +636,151 @@ class GuruController extends Controller
     {
         \App\Services\EWSService::analyzeClass($classroom->id);
         return back()->with('success', 'Analisis EWS (Deteksi Risiko) selesai dijalankan secara otomatis.');
+    }
+    public function updateKelompok(Request $request, Classroom $classroom, Group $group)
+    {
+        abort_if($classroom->created_by !== auth()->id() || $group->class_id !== $classroom->id, 403);
+        
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'members' => 'nullable|array'
+        ]);
+
+        $group->update(['name' => $data['name']]);
+        if ($request->has('members')) {
+            $group->members()->sync($data['members']);
+        }
+        
+        return back()->with('success', 'Kelompok diperbarui.');
+    }
+
+    public function deleteKelompok(Classroom $classroom, Group $group)
+    {
+        abort_if($classroom->created_by !== auth()->id() || $group->class_id !== $classroom->id, 403);
+        $group->delete();
+        return back()->with('success', 'Kelompok dihapus.');
+    }
+
+    public function updateTugas(Request $request, Assignment $assignment)
+    {
+        $classroom = Classroom::findOrFail($assignment->class_id);
+        abort_if($classroom->created_by !== auth()->id(), 403);
+
+        $data = $request->validate([
+            'title' => 'required',
+            'segment' => 'nullable|string',
+            'description' => 'nullable',
+            'deadline' => 'required|date',
+            'file' => 'nullable|file|max:4096',
+        ]);
+
+        if ($request->hasFile('file')) {
+            if ($assignment->file_path) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($assignment->file_path);
+            }
+            $data['file_path'] = $request->file('file')->store('assignments', 'public');
+        }
+
+        $assignment->update($data);
+        return back()->with('success', 'Tugas berhasil diperbarui.');
+    }
+
+    public function deleteTugas(Assignment $assignment)
+    {
+        $classroom = Classroom::findOrFail($assignment->class_id);
+        abort_if($classroom->created_by !== auth()->id(), 403);
+        
+        if ($assignment->file_path) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($assignment->file_path);
+        }
+        
+        $assignment->delete();
+        return back()->with('success', 'Tugas berhasil dihapus.');
+    }
+
+    public function updateKuis(Request $request, Quiz $quiz)
+    {
+        $classroom = Classroom::findOrFail($quiz->class_id);
+        abort_if($classroom->created_by !== auth()->id(), 403);
+
+        $data = $request->validate([
+            'title' => 'required',
+            'duration_minutes' => 'required|integer|min:5',
+            'deadline' => 'required|date',
+        ]);
+
+        $quiz->update($data);
+
+        $existingQuestionIds = [];
+
+        foreach ($request->input('questions', []) as $index => $row) {
+            $questionText = trim((string) ($row['question'] ?? ''));
+            if ($questionText === '') continue;
+
+            $questionId = $row['id'] ?? null;
+            $imagePath = null;
+
+            if ($questionId) {
+                $question = Question::find($questionId);
+                if ($question && $question->quiz_id === $quiz->id) {
+                    $existingQuestionIds[] = $question->id;
+                    $imagePath = $question->image_path;
+
+                    if ($request->hasFile("questions.{$index}.image")) {
+                        if ($imagePath) {
+                            \Illuminate\Support\Facades\Storage::disk('public')->delete($imagePath);
+                        }
+                        $imagePath = $request->file("questions.{$index}.image")->store('questions', 'public');
+                    }
+
+                    $question->update([
+                        'question_text' => $questionText,
+                        'image_path' => $imagePath,
+                        'option_a' => $row['options']['a'] ?? '',
+                        'option_b' => $row['options']['b'] ?? '',
+                        'option_c' => $row['options']['c'] ?? '',
+                        'option_d' => $row['options']['d'] ?? '',
+                        'correct_answer' => $row['correct'] ?? 'a',
+                    ]);
+                }
+            } else {
+                if ($request->hasFile("questions.{$index}.image")) {
+                    $imagePath = $request->file("questions.{$index}.image")->store('questions', 'public');
+                }
+
+                $newQ = Question::create([
+                    'quiz_id' => $quiz->id,
+                    'question_text' => $questionText,
+                    'image_path' => $imagePath,
+                    'option_a' => $row['options']['a'] ?? '',
+                    'option_b' => $row['options']['b'] ?? '',
+                    'option_c' => $row['options']['c'] ?? '',
+                    'option_d' => $row['options']['d'] ?? '',
+                    'correct_answer' => $row['correct'] ?? 'a',
+                ]);
+                $existingQuestionIds[] = $newQ->id;
+            }
+        }
+
+        $questionsToDelete = Question::where('quiz_id', $quiz->id)
+            ->whereNotIn('id', $existingQuestionIds)
+            ->get();
+            
+        foreach ($questionsToDelete as $qt) {
+            if ($qt->image_path) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($qt->image_path);
+            }
+            $qt->delete();
+        }
+
+        return back()->with('success', 'Kuis berhasil diperbarui.');
+    }
+
+    public function deleteKuis(Quiz $quiz)
+    {
+        $classroom = Classroom::findOrFail($quiz->class_id);
+        abort_if($classroom->created_by !== auth()->id(), 403);
+        $quiz->delete();
+        return back()->with('success', 'Kuis berhasil dihapus.');
     }
 }

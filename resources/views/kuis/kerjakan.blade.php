@@ -29,6 +29,11 @@
                             </div>
                             <div class="flex-1">
                                 <p class="font-semibold text-gray-800 mb-4 text-base">{{ $question->question_text }}</p>
+                                @if($question->image_path)
+                                    <div class="mb-4">
+                                        <img src="{{ Storage::url($question->image_path) }}" alt="Gambar Soal" class="rounded-xl border border-gray-200 max-h-64 object-contain">
+                                    </div>
+                                @endif
                                 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                                     @foreach(['a','b','c','d'] as $opt)

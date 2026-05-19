@@ -44,11 +44,23 @@ class AuthController extends Controller
             'role' => ['required', 'in:guru,siswa,wali'],
         ]);
 
+        $studentCode = null;
+        if ($data['role'] === 'siswa') {
+            do {
+                $studentCode = (string) random_int(1000000000, 9999999999);
+            } while (User::where('student_code', $studentCode)->exists());
+        } elseif ($data['role'] === 'guru') {
+            do {
+                $studentCode = (string) random_int(100000, 999999);
+            } while (User::where('student_code', $studentCode)->exists());
+        }
+
         User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'role' => $data['role'],
+            'student_code' => $studentCode,
         ]);
 
         return redirect()->route('login')->with('success', 'Registrasi berhasil.');

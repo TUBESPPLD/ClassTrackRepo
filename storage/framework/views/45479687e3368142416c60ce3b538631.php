@@ -1,10 +1,19 @@
-<x-layouts.app :title="'Dashboard Guru'">
+<?php if (isset($component)) { $__componentOriginal5863877a5171c196453bfa0bd807e410 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal5863877a5171c196453bfa0bd807e410 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.layouts.app','data' => ['title' => 'Dashboard Guru']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('layouts.app'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['title' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute('Dashboard Guru')]); ?>
     <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
             <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight font-outfit">Ruang Kerja Guru</h1>
             <p class="text-base text-gray-500 mt-1">Selamat datang kembali! Kelola kelas, tugas, dan pantau perkembangan siswa Anda.</p>
         </div>
-        <a href="{{ route('guru.kelas') }}" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold hover:shadow-lg hover:shadow-blue-500/30 transition-all transform hover:-translate-y-0.5">
+        <a href="<?php echo e(route('guru.kelas')); ?>" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold hover:shadow-lg hover:shadow-blue-500/30 transition-all transform hover:-translate-y-0.5">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
             Buat Kelas Baru
         </a>
@@ -20,7 +29,7 @@
                 </div>
                 <div>
                     <p class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Total Kelas</p>
-                    <p class="text-3xl font-extrabold text-gray-900">{{ $kelas ?? 0 }}</p>
+                    <p class="text-3xl font-extrabold text-gray-900"><?php echo e($kelas ?? 0); ?></p>
                 </div>
             </div>
         </div>
@@ -33,7 +42,7 @@
                 </div>
                 <div>
                     <p class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Total Tugas</p>
-                    <p class="text-3xl font-extrabold text-gray-900">{{ $tugas ?? 0 }}</p>
+                    <p class="text-3xl font-extrabold text-gray-900"><?php echo e($tugas ?? 0); ?></p>
                 </div>
             </div>
         </div>
@@ -46,7 +55,7 @@
                 </div>
                 <div>
                     <p class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Total Kuis</p>
-                    <p class="text-3xl font-extrabold text-gray-900">{{ $kuis ?? 0 }}</p>
+                    <p class="text-3xl font-extrabold text-gray-900"><?php echo e($kuis ?? 0); ?></p>
                 </div>
             </div>
         </div>
@@ -59,7 +68,7 @@
                 </div>
                 <div>
                     <p class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Materi Dibuat</p>
-                    <p class="text-3xl font-extrabold text-gray-900">{{ $materi ?? 0 }}</p>
+                    <p class="text-3xl font-extrabold text-gray-900"><?php echo e($materi ?? 0); ?></p>
                 </div>
             </div>
         </div>
@@ -68,30 +77,31 @@
     <!-- Kelas Aktif Terbaru -->
     <div class="mb-6 flex justify-between items-center border-b border-gray-200 pb-4">
         <h2 class="text-2xl font-bold text-gray-800 font-outfit">Kelas Terbaru Anda</h2>
-        <a href="{{ route('guru.kelas') }}" class="text-sm font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1 transition-colors">
+        <a href="<?php echo e(route('guru.kelas')); ?>" class="text-sm font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1 transition-colors">
             Lihat Semua <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
         </a>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        @forelse(($recentClasses ?? []) as $class)
-            <a href="{{ route('guru.kelas.show', $class) }}" class="block bg-white rounded-3xl shadow-sm border border-gray-100 hover:shadow-xl transition-all group overflow-hidden flex flex-col h-full transform hover:-translate-y-1">
+        <?php $__empty_1 = true; $__currentLoopData = ($recentClasses ?? []); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $class): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+            <a href="<?php echo e(route('guru.kelas.show', $class)); ?>" class="block bg-white rounded-3xl shadow-sm border border-gray-100 hover:shadow-xl transition-all group overflow-hidden flex flex-col h-full transform hover:-translate-y-1">
                 <div class="h-40 w-full relative bg-gray-200 overflow-hidden">
-                    @if($class->cover_image)
-                        <img src="{{ str_starts_with($class->cover_image, 'http') ? $class->cover_image : Storage::url($class->cover_image) }}" alt="Cover" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    @else
+                    <?php if($class->cover_image): ?>
+                        <img src="<?php echo e(str_starts_with($class->cover_image, 'http') ? $class->cover_image : Storage::url($class->cover_image)); ?>" alt="Cover" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <?php else: ?>
                         <!-- Random abstract image related to learning -->
                         <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Default Cover" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80 mix-blend-multiply">
                         <div class="absolute inset-0 bg-gradient-to-t from-blue-900/60 to-transparent"></div>
-                    @endif
+                    <?php endif; ?>
                     <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg shadow-sm text-xs font-bold text-gray-800">
-                        {{ $class->class_code }}
+                        <?php echo e($class->class_code); ?>
+
                     </div>
                 </div>
                 
                 <div class="p-6 flex-1 flex flex-col">
-                    <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors line-clamp-1">{{ $class->name }}</h3>
-                    <p class="text-sm text-gray-500 line-clamp-2 mb-4 flex-1">{{ $class->description ?: 'Tidak ada deskripsi spesifik untuk kelas ini.' }}</p>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors line-clamp-1"><?php echo e($class->name); ?></h3>
+                    <p class="text-sm text-gray-500 line-clamp-2 mb-4 flex-1"><?php echo e($class->description ?: 'Tidak ada deskripsi spesifik untuk kelas ini.'); ?></p>
                     
                     <div class="mt-auto flex items-center justify-between text-sm font-medium text-gray-400 border-t border-gray-50 pt-4">
                         <span class="flex items-center gap-1 text-blue-600">
@@ -100,17 +110,27 @@
                     </div>
                 </div>
             </a>
-        @empty
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
             <div class="col-span-full bg-white rounded-3xl p-12 border border-dashed border-gray-300 text-center flex flex-col items-center justify-center">
                 <div class="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-4">
                     <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                 </div>
                 <h3 class="text-xl font-bold text-gray-800 mb-2">Belum Ada Kelas</h3>
                 <p class="text-gray-500 mb-6">Mulai perjalanan mengajar Anda dengan membuat kelas pertama.</p>
-                <a href="{{ route('guru.kelas') }}" class="px-6 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-colors shadow-sm">
+                <a href="<?php echo e(route('guru.kelas')); ?>" class="px-6 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-colors shadow-sm">
                     Buat Kelas Sekarang
                 </a>
             </div>
-        @endforelse
+        <?php endif; ?>
     </div>
-</x-layouts.app>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal5863877a5171c196453bfa0bd807e410)): ?>
+<?php $attributes = $__attributesOriginal5863877a5171c196453bfa0bd807e410; ?>
+<?php unset($__attributesOriginal5863877a5171c196453bfa0bd807e410); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal5863877a5171c196453bfa0bd807e410)): ?>
+<?php $component = $__componentOriginal5863877a5171c196453bfa0bd807e410; ?>
+<?php unset($__componentOriginal5863877a5171c196453bfa0bd807e410); ?>
+<?php endif; ?>
+<?php /**PATH C:\Users\user\ClassTrackRepo\resources\views/dashboard-guru.blade.php ENDPATH**/ ?>
