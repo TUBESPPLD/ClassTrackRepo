@@ -586,6 +586,8 @@ class GuruController extends Controller
             'student_id' => 'required|exists:users,id',
             'assignment_ids' => 'nullable|array',
             'assignment_ids.*' => 'integer|exists:assignments,id',
+            'quiz_ids' => 'nullable|array',
+            'quiz_ids.*' => 'integer|exists:quizzes,id',
             'deadline' => 'required|date',
             'note' => 'nullable|string',
         ]);
@@ -597,10 +599,12 @@ class GuruController extends Controller
         $deadline = $data['deadline'];
         $note = $data['note'] ?? null;
         $assignmentIds = array_values(array_unique($data['assignment_ids'] ?? []));
+        $quizIds = array_values(array_unique($data['quiz_ids'] ?? []));
 
-        if (count($assignmentIds) === 0) {
+        if (count($assignmentIds) === 0 && count($quizIds) === 0) {
             RemedialTask::create([
                 'assignment_id' => null,
+                'quiz_id' => null,
                 'class_id' => $classroom->id,
                 'student_id' => $studentId,
                 'created_by' => auth()->id(),
@@ -609,24 +613,45 @@ class GuruController extends Controller
                 'status' => 'assigned',
             ]);
 
-            return back()->with('success', 'Program remedial diberikan.');
+            return back()->with('success', 'Program remedial umum diberikan.');
         }
 
-        $validAssignmentIds = Assignment::where('class_id', $classroom->id)
-            ->whereIn('id', $assignmentIds)
-            ->pluck('id')
-            ->all();
+        if (count($assignmentIds) > 0) {
+            $validAssignmentIds = Assignment::where('class_id', $classroom->id)
+                ->whereIn('id', $assignmentIds)
+                ->pluck('id')
+                ->all();
 
-        foreach ($validAssignmentIds as $assignmentId) {
-            RemedialTask::updateOrCreate(
-                ['student_id' => $studentId, 'assignment_id' => $assignmentId, 'class_id' => $classroom->id],
-                [
-                    'created_by' => auth()->id(),
-                    'deadline' => $deadline,
-                    'note' => $note,
-                    'status' => 'assigned',
-                ]
-            );
+            foreach ($validAssignmentIds as $assignmentId) {
+                RemedialTask::updateOrCreate(
+                    ['student_id' => $studentId, 'assignment_id' => $assignmentId, 'quiz_id' => null, 'class_id' => $classroom->id],
+                    [
+                        'created_by' => auth()->id(),
+                        'deadline' => $deadline,
+                        'note' => $note,
+                        'status' => 'assigned',
+                    ]
+                );
+            }
+        }
+
+        if (count($quizIds) > 0) {
+            $validQuizIds = Quiz::where('class_id', $classroom->id)
+                ->whereIn('id', $quizIds)
+                ->pluck('id')
+                ->all();
+
+            foreach ($validQuizIds as $quizId) {
+                RemedialTask::updateOrCreate(
+                    ['student_id' => $studentId, 'quiz_id' => $quizId, 'assignment_id' => null, 'class_id' => $classroom->id],
+                    [
+                        'created_by' => auth()->id(),
+                        'deadline' => $deadline,
+                        'note' => $note,
+                        'status' => 'assigned',
+                    ]
+                );
+            }
         }
 
         return back()->with('success', 'Program remedial diberikan.');

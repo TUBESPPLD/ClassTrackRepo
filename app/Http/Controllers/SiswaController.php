@@ -45,10 +45,18 @@ class SiswaController extends Controller
         $remedials = RemedialTask::where('student_id', auth()->id())
             ->where('class_id', $classroom->id)
             ->where('status', 'assigned')
+            ->whereNotNull('assignment_id')
             ->get()
             ->keyBy('assignment_id');
 
-        return view('kelas.show-siswa', compact('classroom', 'remedials'));
+        $remedialQuizzes = RemedialTask::where('student_id', auth()->id())
+            ->where('class_id', $classroom->id)
+            ->where('status', 'assigned')
+            ->whereNotNull('quiz_id')
+            ->get()
+            ->keyBy('quiz_id');
+
+        return view('kelas.show-siswa', compact('classroom', 'remedials', 'remedialQuizzes'));
     }
 
     public function submissionTugas(Request $request, Assignment $assignment)
@@ -110,10 +118,19 @@ class SiswaController extends Controller
                 'answers_json' => $answers,
             ]);
 
+            $remedial = RemedialTask::where('student_id', auth()->id())
+                ->where('quiz_id', $quiz->id)
+                ->where('status', 'assigned')
+                ->first();
+
+            if ($remedial) {
+                $remedial->update(['status' => 'completed']);
+            }
+
             // Automatically trigger EWS analysis for this student
             \App\Services\EWSService::analyzeStudent(auth()->id(), $quiz->class_id);
 
-            return redirect()->route('siswa.nilai')->with('success', 'Kuis selesai.');
+            return redirect()->route('siswa.nilai')->with('success', $remedial ? 'Kuis (Remedial) selesai.' : 'Kuis selesai.');
         }
 
         return view('kuis.kerjakan', ['quiz' => $quiz->load('questions')]);
@@ -134,6 +151,7 @@ class SiswaController extends Controller
                 $q->where('is_hidden', false);
             })
             ->with('quiz.classroom')
+            ->orderByDesc('created_at')
             ->get();
 
         return view('tugas.submission', compact('assignmentScores', 'quizScores'));

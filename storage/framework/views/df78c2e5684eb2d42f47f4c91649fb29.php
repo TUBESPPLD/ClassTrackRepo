@@ -1,17 +1,26 @@
-<x-layouts.app :title="'Monitoring Kelas - ' . $classroom->name">
+<?php if (isset($component)) { $__componentOriginal5863877a5171c196453bfa0bd807e410 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal5863877a5171c196453bfa0bd807e410 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.layouts.app','data' => ['title' => 'Monitoring Kelas - ' . $classroom->name]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('layouts.app'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['title' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute('Monitoring Kelas - ' . $classroom->name)]); ?>
     <div class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
             <div class="flex items-center gap-3 mb-1">
-                <a href="{{ route('guru.kelas.show', $classroom) }}" class="text-gray-400 hover:text-blue-600 transition-colors">
+                <a href="<?php echo e(route('guru.kelas.show', $classroom)); ?>" class="text-gray-400 hover:text-blue-600 transition-colors">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                 </a>
                 <h1 class="text-2xl font-bold text-gray-800">Monitoring & EWS</h1>
-                <span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs font-semibold border border-blue-100">{{ $classroom->name }}</span>
+                <span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs font-semibold border border-blue-100"><?php echo e($classroom->name); ?></span>
             </div>
             <p class="text-sm text-gray-500 ml-9">Pantau rata-rata nilai, persentase kehadiran, dan siswa berisiko.</p>
         </div>
-        <form method="POST" action="{{ route('guru.ews.analisis', $classroom) }}">
-            @csrf
+        <form method="POST" action="<?php echo e(route('guru.ews.analisis', $classroom)); ?>">
+            <?php echo csrf_field(); ?>
             <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-xl font-semibold shadow-sm flex items-center gap-2 transition-colors">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                 Jalankan Analisis EWS
@@ -24,14 +33,14 @@
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex items-center justify-between">
             <div>
                 <p class="text-sm font-medium text-gray-500 mb-1">Total Siswa Terdaftar</p>
-                <p class="text-3xl font-bold text-gray-900">{{ count($data) }}</p>
+                <p class="text-3xl font-bold text-gray-900"><?php echo e(count($data)); ?></p>
             </div>
             <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
             </div>
         </div>
 
-        @php
+        <?php
             $totalNilai = 0;
             $totalPresensi = 0;
             $siswaBerisiko = 0;
@@ -44,12 +53,12 @@
             }
             $avgKelasNilai = count($data) > 0 ? round($totalNilai / count($data), 2) : 0;
             $avgKelasPresensi = count($data) > 0 ? round($totalPresensi / count($data), 2) : 0;
-        @endphp
+        ?>
 
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex items-center justify-between">
             <div>
                 <p class="text-sm font-medium text-gray-500 mb-1">Rata-rata Nilai Kelas</p>
-                <p class="text-3xl font-bold {{ $avgKelasNilai < 70 ? 'text-red-600' : 'text-green-600' }}">{{ $avgKelasNilai }}</p>
+                <p class="text-3xl font-bold <?php echo e($avgKelasNilai < 70 ? 'text-red-600' : 'text-green-600'); ?>"><?php echo e($avgKelasNilai); ?></p>
             </div>
             <div class="w-12 h-12 rounded-full bg-green-50 text-green-500 flex items-center justify-center">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -57,12 +66,12 @@
         </div>
 
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex items-center justify-between relative overflow-hidden">
-            @if($siswaBerisiko > 0)
+            <?php if($siswaBerisiko > 0): ?>
                 <div class="absolute top-0 right-0 w-2 h-full bg-red-500"></div>
-            @endif
+            <?php endif; ?>
             <div>
                 <p class="text-sm font-medium text-gray-500 mb-1">Siswa Berisiko (EWS)</p>
-                <p class="text-3xl font-bold {{ $siswaBerisiko > 0 ? 'text-red-600' : 'text-gray-900' }}">{{ $siswaBerisiko }}</p>
+                <p class="text-3xl font-bold <?php echo e($siswaBerisiko > 0 ? 'text-red-600' : 'text-gray-900'); ?>"><?php echo e($siswaBerisiko); ?></p>
             </div>
             <div class="w-12 h-12 rounded-full bg-red-50 text-red-500 flex items-center justify-center">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
@@ -100,46 +109,47 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100 text-sm">
-                    @forelse($data as $d)
+                    <?php $__empty_1 = true; $__currentLoopData = $data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $d): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                         <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-6 py-4 font-medium text-gray-800">{{ $d['student']->name }}</td>
+                            <td class="px-6 py-4 font-medium text-gray-800"><?php echo e($d['student']->name); ?></td>
                             <td class="px-6 py-4 text-center">
-                                <span class="{{ $d['avgNilai'] < 70 ? 'text-red-600 font-bold' : 'text-gray-600' }}">
-                                    {{ $d['avgNilai'] }}
+                                <span class="<?php echo e($d['avgNilai'] < 70 ? 'text-red-600 font-bold' : 'text-gray-600'); ?>">
+                                    <?php echo e($d['avgNilai']); ?>
+
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-center">
-                                <span class="{{ $d['presensi'] < 75 ? 'text-red-600 font-bold' : 'text-gray-600' }}">
-                                    {{ $d['presensi'] }}%
+                                <span class="<?php echo e($d['presensi'] < 75 ? 'text-red-600 font-bold' : 'text-gray-600'); ?>">
+                                    <?php echo e($d['presensi']); ?>%
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-center">
-                                @if($d['risk'])
+                                <?php if($d['risk']): ?>
                                     <div class="flex flex-col items-center gap-2">
                                         <div class="flex items-center justify-center gap-2">
-                                            <span class="inline-flex items-center gap-1 px-3 py-1 bg-red-50 text-red-600 rounded-full text-xs font-bold" title="{{ $d['risk']->reason }}">
+                                            <span class="inline-flex items-center gap-1 px-3 py-1 bg-red-50 text-red-600 rounded-full text-xs font-bold" title="<?php echo e($d['risk']->reason); ?>">
                                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                                                 Berisiko
                                             </span>
-                                            <button onclick="openRemedialModal({{ $d['student']->id }}, '{{ addslashes($d['student']->name) }}')" class="p-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow-sm tooltip" title="Tindak Lanjut Akademik (Remedial)">
+                                            <button onclick="openRemedialModal(<?php echo e($d['student']->id); ?>, '<?php echo e(addslashes($d['student']->name)); ?>')" class="p-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow-sm tooltip" title="Tindak Lanjut Akademik (Remedial)">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                                             </button>
                                         </div>
-                                        <p class="text-[10px] text-red-500 font-medium max-w-[150px] truncate" title="{{ $d['risk']->reason }}">{{ $d['risk']->reason }}</p>
+                                        <p class="text-[10px] text-red-500 font-medium max-w-[150px] truncate" title="<?php echo e($d['risk']->reason); ?>"><?php echo e($d['risk']->reason); ?></p>
                                     </div>
-                                @else
+                                <?php else: ?>
                                     <span class="inline-flex items-center gap-1 px-3 py-1 bg-green-50 text-green-600 rounded-full text-xs font-bold">
                                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                         Aman
                                     </span>
-                                @endif
+                                <?php endif; ?>
                             </td>
                         </tr>
-                    @empty
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                         <tr>
                             <td colspan="4" class="px-6 py-8 text-center text-gray-500">Belum ada data siswa di kelas ini.</td>
                         </tr>
-                    @endforelse
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
@@ -165,25 +175,25 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100 text-sm">
-                    @forelse($data as $d)
+                    <?php $__empty_1 = true; $__currentLoopData = $data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $d): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                         <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-6 py-4 font-medium text-gray-800">{{ $d['student']->name }}</td>
-                            <td class="px-6 py-4 text-center text-green-600 font-bold">{{ $d['kehadiran']['hadir'] }}</td>
-                            <td class="px-6 py-4 text-center text-yellow-600 font-bold">{{ $d['kehadiran']['sakit'] }}</td>
-                            <td class="px-6 py-4 text-center text-blue-600 font-bold">{{ $d['kehadiran']['izin'] }}</td>
-                            <td class="px-6 py-4 text-center text-red-600 font-bold">{{ $d['kehadiran']['alpa'] }}</td>
-                            <td class="px-6 py-4 text-center font-bold text-gray-700">{{ $d['kehadiran']['total'] }}</td>
+                            <td class="px-6 py-4 font-medium text-gray-800"><?php echo e($d['student']->name); ?></td>
+                            <td class="px-6 py-4 text-center text-green-600 font-bold"><?php echo e($d['kehadiran']['hadir']); ?></td>
+                            <td class="px-6 py-4 text-center text-yellow-600 font-bold"><?php echo e($d['kehadiran']['sakit']); ?></td>
+                            <td class="px-6 py-4 text-center text-blue-600 font-bold"><?php echo e($d['kehadiran']['izin']); ?></td>
+                            <td class="px-6 py-4 text-center text-red-600 font-bold"><?php echo e($d['kehadiran']['alpa']); ?></td>
+                            <td class="px-6 py-4 text-center font-bold text-gray-700"><?php echo e($d['kehadiran']['total']); ?></td>
                             <td class="px-6 py-4 text-center">
-                                <span class="{{ $d['presensi'] < 75 ? 'text-red-600 font-bold' : 'text-gray-600 font-bold' }}">
-                                    {{ $d['presensi'] }}%
+                                <span class="<?php echo e($d['presensi'] < 75 ? 'text-red-600 font-bold' : 'text-gray-600 font-bold'); ?>">
+                                    <?php echo e($d['presensi']); ?>%
                                 </span>
                             </td>
                         </tr>
-                    @empty
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                         <tr>
                             <td colspan="7" class="px-6 py-8 text-center text-gray-500">Belum ada data presensi di kelas ini.</td>
                         </tr>
-                    @endforelse
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
@@ -201,29 +211,29 @@
                 <p class="text-sm text-gray-500 mt-1">Berikan tugas remedial untuk siswa <strong id="remedial-student-name"></strong>.</p>
             </div>
 
-            <form method="POST" action="{{ route('guru.remedial') }}" x-data="{ submitting: false }" @submit="submitting = true">
-                @csrf
-                <input type="hidden" name="class_id" value="{{ $classroom->id }}">
+            <form method="POST" action="<?php echo e(route('guru.remedial')); ?>" x-data="{ submitting: false }" @submit="submitting = true">
+                <?php echo csrf_field(); ?>
+                <input type="hidden" name="class_id" value="<?php echo e($classroom->id); ?>">
                 <input type="hidden" name="student_id" id="remedial-student-id">
                 <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-1.5">Program Remedial (Pilih Tugas / Kuis yang Diperpanjang)</label>
                         <div class="max-h-40 overflow-y-auto space-y-2 p-3 bg-gray-50 border border-gray-200 rounded-xl">
-                            @foreach($classroom->assignments as $assignment)
+                            <?php $__currentLoopData = $classroom->assignments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $assignment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <label class="flex items-start gap-2 text-sm text-gray-700">
-                                    <input type="checkbox" name="assignment_ids[]" value="{{ $assignment->id }}" class="mt-1 text-blue-600">
-                                    <span class="leading-snug">[Tugas] {{ $assignment->title }}</span>
+                                    <input type="checkbox" name="assignment_ids[]" value="<?php echo e($assignment->id); ?>" class="mt-1 text-blue-600">
+                                    <span class="leading-snug">[Tugas] <?php echo e($assignment->title); ?></span>
                                 </label>
-                            @endforeach
-                            @foreach($classroom->quizzes as $kuis)
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            <?php $__currentLoopData = $classroom->quizzes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $kuis): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <label class="flex items-start gap-2 text-sm text-gray-700">
-                                    <input type="checkbox" name="quiz_ids[]" value="{{ $kuis->id }}" class="mt-1 text-purple-600">
-                                    <span class="leading-snug">[Kuis] {{ $kuis->title }}</span>
+                                    <input type="checkbox" name="quiz_ids[]" value="<?php echo e($kuis->id); ?>" class="mt-1 text-purple-600">
+                                    <span class="leading-snug">[Kuis] <?php echo e($kuis->title); ?></span>
                                 </label>
-                            @endforeach
-                            @if($classroom->assignments->count() === 0 && $classroom->quizzes->count() === 0)
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            <?php if($classroom->assignments->count() === 0 && $classroom->quizzes->count() === 0): ?>
                                 <p class="text-xs text-gray-500">Belum ada tugas atau kuis di kelas ini.</p>
-                            @endif
+                            <?php endif; ?>
                         </div>
                         <p class="text-xs text-gray-500 mt-1">Jika tidak memilih tugas/kuis, sistem akan membuat remedial umum.</p>
                     </div>
@@ -248,9 +258,9 @@
     <!-- Chart Configuration -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const labels = {!! json_encode(array_map(function($i) { return $i['student']->name; }, $data)) !!};
-            const nilaiData = {!! json_encode(array_column($data, 'avgNilai')) !!};
-            const presensiData = {!! json_encode(array_column($data, 'presensi')) !!};
+            const labels = <?php echo json_encode(array_map(function($i) { return $i['student']->name; }, $data)); ?>;
+            const nilaiData = <?php echo json_encode(array_column($data, 'avgNilai')); ?>;
+            const presensiData = <?php echo json_encode(array_column($data, 'presensi')); ?>;
 
             // Chart Nilai
             new Chart(document.getElementById('nilaiChart'), {
@@ -307,4 +317,14 @@
             document.getElementById('modal-remedial').classList.remove('hidden');
         }
     </script>
-</x-layouts.app>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal5863877a5171c196453bfa0bd807e410)): ?>
+<?php $attributes = $__attributesOriginal5863877a5171c196453bfa0bd807e410; ?>
+<?php unset($__attributesOriginal5863877a5171c196453bfa0bd807e410); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal5863877a5171c196453bfa0bd807e410)): ?>
+<?php $component = $__componentOriginal5863877a5171c196453bfa0bd807e410; ?>
+<?php unset($__componentOriginal5863877a5171c196453bfa0bd807e410); ?>
+<?php endif; ?>
+<?php /**PATH /Users/alvaritzymaulidan/Documents/ClassTrackRepo-main/resources/views/monitoring/index.blade.php ENDPATH**/ ?>

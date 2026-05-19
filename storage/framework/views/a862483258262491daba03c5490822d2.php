@@ -1,12 +1,21 @@
-<x-layouts.app :title="'Kelola Kuis - ' . $classroom->name">
+<?php if (isset($component)) { $__componentOriginal5863877a5171c196453bfa0bd807e410 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal5863877a5171c196453bfa0bd807e410 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.layouts.app','data' => ['title' => 'Kelola Kuis - ' . $classroom->name]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('layouts.app'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['title' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute('Kelola Kuis - ' . $classroom->name)]); ?>
     <div class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
             <div class="flex items-center gap-3 mb-1">
-                <a href="{{ route('guru.kelas.show', $classroom) }}" class="text-gray-400 hover:text-blue-600 transition-colors">
+                <a href="<?php echo e(route('guru.kelas.show', $classroom)); ?>" class="text-gray-400 hover:text-blue-600 transition-colors">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                 </a>
                 <h1 class="text-2xl font-bold text-gray-800">Kelola Kuis</h1>
-                <span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs font-semibold border border-blue-100">{{ $classroom->name }}</span>
+                <span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs font-semibold border border-blue-100"><?php echo e($classroom->name); ?></span>
             </div>
             <p class="text-sm text-gray-500 ml-9">Buat kuis pilihan ganda dan pantau hasilnya.</p>
         </div>
@@ -17,7 +26,7 @@
     </div>
 
     <div class="space-y-6">
-        @forelse(($quizzes ?? []) as $kuis)
+        <?php $__empty_1 = true; $__currentLoopData = ($quizzes ?? []); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $kuis): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
             <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col lg:flex-row gap-6">
                 <!-- Kuis Info -->
                 <div class="flex-1">
@@ -27,19 +36,19 @@
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             </div>
                             <div>
-                                <h3 class="font-bold text-gray-900 text-lg">{{ $kuis->title }}</h3>
+                                <h3 class="font-bold text-gray-900 text-lg"><?php echo e($kuis->title); ?></h3>
                                 <div class="flex items-center gap-2 text-xs font-medium text-purple-600">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    Durasi: {{ $kuis->duration_minutes }} Menit
+                                    Durasi: <?php echo e($kuis->duration_minutes); ?> Menit
                                 </div>
                             </div>
                         </div>
                         <div class="flex items-center gap-2">
-                            <button onclick="document.getElementById('modal-edit-kuis-{{ $kuis->id }}').classList.remove('hidden')" class="p-1.5 text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors">
+                            <button onclick="document.getElementById('modal-edit-kuis-<?php echo e($kuis->id); ?>').classList.remove('hidden')" class="p-1.5 text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                             </button>
-                            <form action="{{ route('guru.kuis.delete', $kuis) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus kuis ini?')">
-                                @csrf @method('DELETE')
+                            <form action="<?php echo e(route('guru.kuis.delete', $kuis)); ?>" method="POST" onsubmit="return confirm('Yakin ingin menghapus kuis ini?')">
+                                <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
                                 <button type="submit" class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                 </button>
@@ -50,27 +59,29 @@
                     <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
                         <h4 class="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
                             <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                            Daftar Soal ({{ $kuis->questions->count() }})
+                            Daftar Soal (<?php echo e($kuis->questions->count()); ?>)
                         </h4>
                         <div class="space-y-3 max-h-40 overflow-y-auto pr-2">
-                            @foreach($kuis->questions as $index => $q)
+                            <?php $__currentLoopData = $kuis->questions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $q): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <div class="text-sm">
                                     <p class="font-medium text-gray-800">
-                                        {{ $index+1 }}. {{ $q->question_text }}
-                                        @if($q->question_bank_question_id)
+                                        <?php echo e($index+1); ?>. <?php echo e($q->question_text); ?>
+
+                                        <?php if($q->question_bank_question_id): ?>
                                             <span class="ml-2 text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700">Bank Soal</span>
-                                        @endif
+                                        <?php endif; ?>
                                     </p>
                                     <ul class="ml-4 mt-1 space-y-1 text-xs text-gray-500">
-                                        @foreach(['a','b','c','d'] as $opt)
-                                            <li class="{{ $q->correct_answer == $opt ? 'text-green-600 font-semibold' : '' }}">
-                                                {{ strtoupper($opt) }}. {{ $q->{'option_'.$opt} }}
-                                                @if($q->correct_answer == $opt) ✓ @endif
+                                        <?php $__currentLoopData = ['a','b','c','d']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $opt): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <li class="<?php echo e($q->correct_answer == $opt ? 'text-green-600 font-semibold' : ''); ?>">
+                                                <?php echo e(strtoupper($opt)); ?>. <?php echo e($q->{'option_'.$opt}); ?>
+
+                                                <?php if($q->correct_answer == $opt): ?> ✓ <?php endif; ?>
                                             </li>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </ul>
                                 </div>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
                     </div>
                 </div>
@@ -79,27 +90,28 @@
                 <div class="w-full lg:w-1/3 bg-blue-50/30 rounded-2xl p-5 border border-blue-100/50 flex flex-col">
                     <h4 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
                         <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        Hasil Siswa ({{ $kuis->attempts->count() }})
+                        Hasil Siswa (<?php echo e($kuis->attempts->count()); ?>)
                     </h4>
                     
                     <div class="flex-1 overflow-y-auto pr-2 space-y-2">
-                        @forelse($kuis->attempts as $attempt)
+                        <?php $__empty_2 = true; $__currentLoopData = $kuis->attempts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $attempt): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_2 = false; ?>
                             <div class="bg-white p-3 rounded-lg shadow-sm border border-gray-100 flex justify-between items-center">
                                 <div>
-                                    <p class="font-medium text-gray-800 text-sm">{{ $attempt->student->name ?? 'Siswa' }}</p>
-                                    <p class="text-xs text-gray-500">{{ \Carbon\Carbon::parse($attempt->created_at)->format('d M H:i') }}</p>
+                                    <p class="font-medium text-gray-800 text-sm"><?php echo e($attempt->student->name ?? 'Siswa'); ?></p>
+                                    <p class="text-xs text-gray-500"><?php echo e(\Carbon\Carbon::parse($attempt->created_at)->format('d M H:i')); ?></p>
                                 </div>
-                                <div class="px-3 py-1 bg-{{ $attempt->score >= 70 ? 'green' : 'red' }}-50 text-{{ $attempt->score >= 70 ? 'green' : 'red' }}-600 font-bold rounded-lg text-sm">
-                                    {{ $attempt->score }}
+                                <div class="px-3 py-1 bg-<?php echo e($attempt->score >= 70 ? 'green' : 'red'); ?>-50 text-<?php echo e($attempt->score >= 70 ? 'green' : 'red'); ?>-600 font-bold rounded-lg text-sm">
+                                    <?php echo e($attempt->score); ?>
+
                                 </div>
                             </div>
-                        @empty
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_2): ?>
                             <p class="text-xs text-gray-500 text-center py-4">Belum ada siswa yang mengerjakan.</p>
-                        @endforelse
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
-        @empty
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
             <div class="bg-white rounded-3xl p-12 border border-dashed border-purple-200 text-center">
                 <div class="w-16 h-16 bg-purple-50 rounded-full flex items-center justify-center mx-auto mb-4 text-purple-400">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -107,7 +119,7 @@
                 <h3 class="text-lg font-bold text-gray-800 mb-2">Belum Ada Kuis</h3>
                 <p class="text-gray-500 max-w-md mx-auto mb-6 text-sm">Anda belum membuat kuis untuk kelas ini. Klik tombol di atas untuk membuat kuis interaktif.</p>
             </div>
-        @endforelse
+        <?php endif; ?>
     </div>
 
     <!-- Modal Create Kuis -->
@@ -119,8 +131,8 @@
             
             <h3 class="text-2xl font-bold text-gray-900 mb-6">Buat Kuis Baru</h3>
 
-            <form method="POST" action="{{ route('guru.kuis', $classroom) }}" enctype="multipart/form-data" x-data="{ submitting: false, questions: [ { q: '', a:'', b:'', c:'', d:'', correct:'a' } ] }" @submit="submitting = true">
-                @csrf
+            <form method="POST" action="<?php echo e(route('guru.kuis', $classroom)); ?>" enctype="multipart/form-data" x-data="{ submitting: false, questions: [ { q: '', a:'', b:'', c:'', d:'', correct:'a' } ] }" @submit="submitting = true">
+                <?php echo csrf_field(); ?>
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                     <div class="md:col-span-2">
                         <label class="block text-sm font-semibold text-gray-700 mb-1.5">Judul Kuis <span class="text-red-500">*</span></label>
@@ -138,18 +150,18 @@
 
                 <div class="mb-6">
                     <label class="block text-sm font-semibold text-gray-700 mb-1.5">Ambil Soal dari Bank Soal (Opsional)</label>
-                    @if(count($bankQuestions ?? []) > 0)
+                    <?php if(count($bankQuestions ?? []) > 0): ?>
                         <select name="question_bank_ids[]" multiple class="w-full border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 text-sm">
-                            @foreach(($bankQuestions ?? []) as $qb)
-                                <option value="{{ $qb->id }}">#{{ $qb->id }} — {{ \Illuminate\Support\Str::limit($qb->question_text, 80) }}</option>
-                            @endforeach
+                            <?php $__currentLoopData = ($bankQuestions ?? []); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $qb): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($qb->id); ?>">#<?php echo e($qb->id); ?> — <?php echo e(\Illuminate\Support\Str::limit($qb->question_text, 80)); ?></option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
                         <p class="text-xs text-gray-500 mt-1">Soal yang dipilih akan disalin ke kuis sebagai referensi dari bank soal.</p>
-                    @else
+                    <?php else: ?>
                         <div class="w-full border border-gray-200 border-dashed rounded-xl px-4 py-6 bg-gray-50 text-center text-sm text-gray-500">
-                            Belum ada soal di Bank Soal. Silakan tambahkan soal terlebih dahulu di menu <a href="{{ route('guru.bank-soal.index', $classroom) }}" class="text-blue-600 hover:underline">Bank Soal</a>.
+                            Belum ada soal di Bank Soal. Silakan tambahkan soal terlebih dahulu di menu <a href="<?php echo e(route('guru.bank-soal.index', $classroom)); ?>" class="text-blue-600 hover:underline">Bank Soal</a>.
                         </div>
-                    @endif
+                    <?php endif; ?>
                 </div>
 
                 <div class="mb-4">
@@ -215,15 +227,15 @@
             </form>
         </div>
     </div>
-    @foreach(($quizzes ?? []) as $kuis)
+    <?php $__currentLoopData = ($quizzes ?? []); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $kuis): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
     <!-- Modal Edit Kuis -->
-    <div id="modal-edit-kuis-{{ $kuis->id }}" class="fixed inset-0 z-50 hidden bg-gray-900/50 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div id="modal-edit-kuis-<?php echo e($kuis->id); ?>" class="fixed inset-0 z-50 hidden bg-gray-900/50 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl w-full max-w-2xl p-8 shadow-xl relative my-8">
-            <button onclick="document.getElementById('modal-edit-kuis-{{ $kuis->id }}').classList.add('hidden')" class="absolute top-5 right-5 text-gray-400 hover:text-gray-600 bg-gray-50 hover:bg-gray-100 rounded-full p-2 transition-colors">
+            <button onclick="document.getElementById('modal-edit-kuis-<?php echo e($kuis->id); ?>').classList.add('hidden')" class="absolute top-5 right-5 text-gray-400 hover:text-gray-600 bg-gray-50 hover:bg-gray-100 rounded-full p-2 transition-colors">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
-            <h3 class="text-2xl font-bold text-gray-900 mb-6">Edit Kuis: {{ $kuis->title }}</h3>
-            @php
+            <h3 class="text-2xl font-bold text-gray-900 mb-6">Edit Kuis: <?php echo e($kuis->title); ?></h3>
+            <?php
                 $quizQuestions = $kuis->questions->map(function($q) {
                     return [
                         'id' => $q->id,
@@ -239,21 +251,21 @@
                 if(empty($quizQuestions)) {
                     $quizQuestions = [['q' => '', 'a'=>'', 'b'=>'', 'c'=>'', 'd'=>'', 'correct'=>'a']];
                 }
-            @endphp
-            <form method="POST" action="{{ route('guru.kuis.update', $kuis) }}" enctype="multipart/form-data" x-data="{ submitting: false, questions: {{ json_encode($quizQuestions) }} }" @submit="submitting = true">
-                @csrf @method('PUT')
+            ?>
+            <form method="POST" action="<?php echo e(route('guru.kuis.update', $kuis)); ?>" enctype="multipart/form-data" x-data="{ submitting: false, questions: <?php echo e(json_encode($quizQuestions)); ?> }" @submit="submitting = true">
+                <?php echo csrf_field(); ?> <?php echo method_field('PUT'); ?>
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                     <div class="md:col-span-2">
                         <label class="block text-sm font-semibold text-gray-700 mb-1.5">Judul Kuis <span class="text-red-500">*</span></label>
-                        <input name="title" value="{{ $kuis->title }}" class="w-full border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 hover:bg-white focus:bg-white focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all text-sm" required>
+                        <input name="title" value="<?php echo e($kuis->title); ?>" class="w-full border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 hover:bg-white focus:bg-white focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all text-sm" required>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-1.5">Durasi (Menit) <span class="text-red-500">*</span></label>
-                        <input type="number" name="duration_minutes" value="{{ $kuis->duration_minutes }}" min="5" class="w-full border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 hover:bg-white focus:bg-white focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all text-sm" required>
+                        <input type="number" name="duration_minutes" value="<?php echo e($kuis->duration_minutes); ?>" min="5" class="w-full border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 hover:bg-white focus:bg-white focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all text-sm" required>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-1.5">Batas Waktu <span class="text-red-500">*</span></label>
-                        <input type="datetime-local" name="deadline" value="{{ $kuis->deadline ? \Carbon\Carbon::parse($kuis->deadline)->format('Y-m-d\TH:i') : '' }}" class="w-full border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 hover:bg-white focus:bg-white focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all text-sm" required>
+                        <input type="datetime-local" name="deadline" value="<?php echo e($kuis->deadline ? \Carbon\Carbon::parse($kuis->deadline)->format('Y-m-d\TH:i') : ''); ?>" class="w-full border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 hover:bg-white focus:bg-white focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all text-sm" required>
                     </div>
                 </div>
                 
@@ -327,5 +339,15 @@
             </form>
         </div>
     </div>
-    @endforeach
-</x-layouts.app>
+    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal5863877a5171c196453bfa0bd807e410)): ?>
+<?php $attributes = $__attributesOriginal5863877a5171c196453bfa0bd807e410; ?>
+<?php unset($__attributesOriginal5863877a5171c196453bfa0bd807e410); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal5863877a5171c196453bfa0bd807e410)): ?>
+<?php $component = $__componentOriginal5863877a5171c196453bfa0bd807e410; ?>
+<?php unset($__componentOriginal5863877a5171c196453bfa0bd807e410); ?>
+<?php endif; ?>
+<?php /**PATH /Users/alvaritzymaulidan/Documents/ClassTrackRepo-main/resources/views/kuis/index.blade.php ENDPATH**/ ?>

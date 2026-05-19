@@ -152,12 +152,18 @@
 
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-1.5">Referensi Bank Soal (Opsional)</label>
-                        <select name="question_bank_ids[]" multiple class="w-full border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 text-sm">
-                            @foreach(($bankQuestions ?? []) as $qb)
-                                <option value="{{ $qb->id }}">#{{ $qb->id }} — {{ \Illuminate\Support\Str::limit($qb->question_text, 80) }}</option>
-                            @endforeach
-                        </select>
-                        <p class="text-xs text-gray-500 mt-1">Soal ini hanya sebagai referensi di tugas (bukan auto-grading).</p>
+                        @if(count($bankQuestions ?? []) > 0)
+                            <select name="question_bank_ids[]" multiple class="w-full border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 text-sm">
+                                @foreach(($bankQuestions ?? []) as $qb)
+                                    <option value="{{ $qb->id }}">#{{ $qb->id }} — {{ \Illuminate\Support\Str::limit($qb->question_text, 80) }}</option>
+                                @endforeach
+                            </select>
+                            <p class="text-xs text-gray-500 mt-1">Soal ini hanya sebagai referensi di tugas (bukan auto-grading).</p>
+                        @else
+                            <div class="w-full border border-gray-200 border-dashed rounded-xl px-4 py-6 bg-gray-50 text-center text-sm text-gray-500">
+                                Belum ada soal di Bank Soal. Silakan tambahkan soal terlebih dahulu di menu <a href="{{ route('guru.bank-soal.index', $classroom) }}" class="text-blue-600 hover:underline">Bank Soal</a>.
+                            </div>
+                        @endif
                     </div>
 
                     <div class="pt-2">
