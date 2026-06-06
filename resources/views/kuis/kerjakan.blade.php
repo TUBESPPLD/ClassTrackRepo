@@ -29,11 +29,14 @@
                             </div>
                             <div class="flex-1">
                                 <p class="font-semibold text-gray-800 mb-4 text-base">{{ $question->question_text }}</p>
+<<<<<<< HEAD
                                 @if($question->image_path)
                                     <div class="mb-4">
                                         <img src="{{ Storage::url($question->image_path) }}" alt="Gambar Soal" class="rounded-xl border border-gray-200 max-h-64 object-contain">
                                     </div>
                                 @endif
+=======
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                                 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                                     @foreach(['a','b','c','d'] as $opt)
@@ -52,7 +55,11 @@
                 @endforeach
 
                 <div class="pt-4 flex justify-end border-t border-gray-100">
+<<<<<<< HEAD
                     <button type="button" onclick="confirmAction('quiz-form', 'Kumpulkan Kuis', 'Apakah Anda yakin ingin mengumpulkan kuis ini? Jawaban tidak dapat diubah setelah dikumpulkan.', 'Ya, Kumpulkan!', 'Batal', '#7c3aed')" class="px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold rounded-xl hover:shadow-lg hover:shadow-purple-500/30 transition-all transform hover:-translate-y-0.5">
+=======
+                    <button type="submit" onclick="return confirm('Apakah Anda yakin ingin mengumpulkan kuis ini? Jawaban tidak dapat diubah setelah dikumpulkan.')" class="px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold rounded-xl hover:shadow-lg hover:shadow-purple-500/30 transition-all transform hover:-translate-y-0.5">
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                         Kumpulkan Jawaban
                     </button>
                 </div>
@@ -76,6 +83,7 @@
             }
 
             if (seconds <= 0) {
+<<<<<<< HEAD
                 Swal.fire({
                     title: 'Waktu Habis!',
                     text: 'Kuis akan otomatis dikumpulkan.',
@@ -88,6 +96,10 @@
                 }).then(() => {
                     formEl.submit();
                 });
+=======
+                alert('Waktu habis! Kuis akan otomatis dikumpulkan.');
+                formEl.submit();
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                 return;
             }
             seconds--;

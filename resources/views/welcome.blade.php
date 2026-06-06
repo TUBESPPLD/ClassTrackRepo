@@ -147,6 +147,19 @@
                             </div>
                         </div>
                         
+<<<<<<< HEAD
+=======
+                        <!-- Floating Card 1 -->
+                        <div class="absolute right-64 top-10 bg-white p-4 rounded-2xl shadow-xl border border-gray-100 flex items-center gap-4 floating-img-2 z-30">
+                            <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-gray-800">Tugas Terkumpul</p>
+                                <p class="text-xs text-gray-500">Baru saja</p>
+                            </div>
+                        </div>
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
 
                         <!-- Secondary Image -->
                         <div class="absolute right-40 bottom-0 w-48 h-48 rounded-3xl overflow-hidden shadow-xl border-4 border-white floating-img-2 z-10 opacity-90">
@@ -270,6 +283,7 @@
             </div>
         </footer>
 
+<<<<<<< HEAD
     <script>
         // Global Cleanup Script for Overlays and Modals
         function forceCleanup() {
@@ -286,4 +300,7 @@
         document.addEventListener('DOMContentLoaded', forceCleanup);
     </script>
 </body>
+=======
+    </body>
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
 </html>

@@ -34,6 +34,7 @@ class AdminController extends Controller
             'role' => 'required|in:admin,guru,siswa,wali',
         ]);
         $data['password'] = Hash::make($data['password']);
+<<<<<<< HEAD
 
         if ($data['role'] === 'siswa') {
             do {
@@ -47,6 +48,8 @@ class AdminController extends Controller
             $data['student_code'] = $studentCode;
         }
 
+=======
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
         User::create($data);
 
         return back()->with('success', 'User ditambahkan.');

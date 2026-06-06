@@ -1,4 +1,5 @@
 <x-layouts.app :title="'Detail Kelas - ' . $classroom->name">
+<<<<<<< HEAD
     @if($classroom->cover_image)
         <div class="h-48 rounded-2xl mb-6 overflow-hidden relative shadow-sm">
             <img src="{{ str_starts_with($classroom->cover_image, 'http') ? $classroom->cover_image : Storage::url($classroom->cover_image) }}" alt="Cover Kelas" class="w-full h-full object-cover">
@@ -44,6 +45,30 @@
 
     <!-- Alpine Tabs -->
     <div x-data="{ tab: 'informasi', showProfile: false, profileData: { name: '', email: '', code: '', avatarUrl: '' } }" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+=======
+    <div class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <div class="flex items-center gap-3 mb-1">
+                <a href="{{ route('guru.kelas') }}" class="text-gray-400 hover:text-blue-600 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                </a>
+                <h1 class="text-2xl font-bold text-gray-800">{{ $classroom->name }}</h1>
+                <span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs font-semibold border border-blue-100">{{ $classroom->class_code }}</span>
+            </div>
+            <p class="text-sm text-gray-500 ml-9">{{ $classroom->description ?? 'Tidak ada deskripsi' }}</p>
+        </div>
+        
+        <div class="flex gap-2">
+            <!-- Edit Button -->
+            <button onclick="document.getElementById('modal-edit-kelas').classList.remove('hidden')" class="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors text-sm font-medium">
+                Edit Kelas
+            </button>
+        </div>
+    </div>
+
+    <!-- Alpine Tabs -->
+    <div x-data="{ tab: 'informasi' }" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
         
         <!-- Tab Navigation -->
         <div class="flex overflow-x-auto border-b border-gray-100 hide-scrollbar">
@@ -78,6 +103,7 @@
                 
                 <div class="space-y-4">
                     @forelse($classroom->announcements as $announcement)
+<<<<<<< HEAD
                         <div class="p-4 border border-gray-100 rounded-xl bg-gray-50/50 flex flex-col sm:flex-row gap-4">
                             <div class="flex-1">
                                 <h3 class="font-semibold text-gray-800 mb-1">{{ $announcement->title }}</h3>
@@ -121,6 +147,12 @@
                                     </div>
                                 </form>
                             </div>
+=======
+                        <div class="p-4 border border-gray-100 rounded-xl bg-gray-50/50">
+                            <h3 class="font-semibold text-gray-800 mb-1">{{ $announcement->title }}</h3>
+                            <p class="text-gray-600 text-sm mb-2">{{ $announcement->content }}</p>
+                            <p class="text-xs text-gray-400">{{ $announcement->created_at->diffForHumans() }}</p>
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                         </div>
                     @empty
                         <div class="text-center py-10 text-gray-500 text-sm">Belum ada pengumuman di kelas ini.</div>
@@ -134,6 +166,7 @@
                     <div>
                         <div class="flex justify-between items-center mb-6">
                             <h2 class="text-lg font-bold text-gray-800">Daftar Siswa</h2>
+<<<<<<< HEAD
                             <div x-data="{ query: '', students: [], loading: false, showDropdown: false, selectedStudent: null }" class="relative">
                                 <form action="{{ route('guru.anggota', $classroom) }}" method="POST" class="flex gap-2">
                                     @csrf
@@ -165,10 +198,18 @@
                                     <button :disabled="!selectedStudent" class="px-4 py-1.5 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 disabled:opacity-50 transition-colors font-medium">Tambah</button>
                                 </form>
                             </div>
+=======
+                            <form action="{{ route('guru.anggota', $classroom) }}" method="POST" class="flex gap-2">
+                                @csrf
+                                <input type="number" name="student_id" placeholder="ID Siswa" class="border px-3 py-1.5 rounded-lg text-sm w-24" required>
+                                <button class="px-3 py-1.5 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700">Tambah</button>
+                            </form>
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                         </div>
                         <ul class="divide-y divide-gray-100 border border-gray-100 rounded-xl">
                             @forelse($classroom->members->where('role', 'siswa') as $member)
                                 <li class="p-4 flex justify-between items-center hover:bg-gray-50 transition-colors">
+<<<<<<< HEAD
                                     <div class="flex items-center gap-3 cursor-pointer group" 
                                          @click="showProfile = true; profileData = { name: '{{ addslashes($member->name) }}', email: '{{ addslashes($member->email) }}', code: '{{ $member->student_code ?? 'Belum ada ID' }}', avatarUrl: '{{ $member->foto ? Storage::url($member->foto) : '' }}' }">
                                         <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-600 text-white flex items-center justify-center font-bold text-sm shadow-sm transform group-hover:scale-105 transition-all duration-300">
@@ -180,6 +221,12 @@
                                         </div>
                                         <div>
                                             <p class="font-semibold text-sm text-gray-800 group-hover:text-blue-600 transition-colors">{{ $member->name }}</p>
+=======
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xs">{{ substr($member->name, 0, 1) }}</div>
+                                        <div>
+                                            <p class="font-medium text-sm text-gray-800">{{ $member->name }}</p>
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                                             <p class="text-xs text-gray-500">{{ $member->email }}</p>
                                         </div>
                                     </div>
@@ -204,6 +251,7 @@
                         <div class="space-y-4">
                             @forelse($classroom->groups as $group)
                                 <div class="p-4 border border-gray-100 rounded-xl bg-gray-50/50">
+<<<<<<< HEAD
                                     <div class="flex justify-between items-start mb-2">
                                         <h3 class="font-semibold text-gray-800">{{ $group->name }}</h3>
                                         <div class="flex items-center gap-1">
@@ -226,6 +274,13 @@
                                                 <span class="w-1 h-1 bg-gray-400 rounded-full"></span>
                                                 {{ $gm->name }}
                                             </li>
+=======
+                                    <h3 class="font-semibold text-gray-800 mb-2">{{ $group->name }}</h3>
+                                    <p class="text-xs text-gray-500 mb-1">Anggota:</p>
+                                    <ul class="text-sm text-gray-600 list-disc list-inside">
+                                        @foreach($group->members as $gm)
+                                            <li>{{ $gm->name }}</li>
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                                         @endforeach
                                     </ul>
                                 </div>
@@ -247,6 +302,7 @@
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     @forelse($classroom->materials as $materi)
+<<<<<<< HEAD
                         <div class="p-5 border border-gray-100 rounded-2xl bg-white shadow-sm hover:shadow-md transition-shadow group relative">
                             <div class="absolute top-4 right-4 flex gap-1">
                                 <button onclick="document.getElementById('modal-edit-materi-{{ $materi->id }}').classList.remove('hidden')" class="p-1 text-gray-400 hover:text-blue-600 transition-colors">
@@ -277,6 +333,17 @@
                                 </a>
                                 @endif
                             </div>
+=======
+                        <div class="p-5 border border-gray-100 rounded-2xl bg-white shadow-sm hover:shadow-md transition-shadow group">
+                            <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center mb-3">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                            </div>
+                            <h3 class="font-bold text-gray-800 mb-1">{{ $materi->title }}</h3>
+                            <p class="text-xs text-gray-500 mb-4 line-clamp-2">{{ $materi->description }}</p>
+                            <a href="{{ Storage::url($materi->file_path) }}" target="_blank" class="text-sm font-medium text-blue-600 hover:text-blue-800 flex items-center gap-1">
+                                Unduh File <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            </a>
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                         </div>
                     @empty
                         <div class="col-span-full text-center py-10 text-gray-500 text-sm">Belum ada materi diunggah.</div>
@@ -351,6 +418,7 @@
                 </div>
             </div>
 
+<<<<<<< HEAD
             <!-- Teams-like Profile Pop-up Modal -->
             <div x-show="showProfile" 
                  style="display: none;" 
@@ -434,6 +502,8 @@
                 </div>
             </div>
 
+=======
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
         </div>
     </div>
 
@@ -462,10 +532,17 @@
 
     <!-- Modal Pengumuman -->
     <div id="modal-pengumuman" class="fixed inset-0 z-50 hidden bg-gray-900/50 backdrop-blur-sm flex items-center justify-center p-4">
+<<<<<<< HEAD
         <div class="bg-white rounded-2xl w-full max-w-2xl p-6 shadow-xl relative">
             <button onclick="document.getElementById('modal-pengumuman').classList.add('hidden')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">&times;</button>
             <h3 class="text-lg font-bold text-gray-800 mb-4">Buat Pengumuman</h3>
             <form method="POST" action="{{ route('guru.pengumuman', $classroom) }}">
+=======
+        <div class="bg-white rounded-2xl w-full max-w-md p-6 shadow-xl relative">
+            <button onclick="document.getElementById('modal-pengumuman').classList.add('hidden')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">&times;</button>
+            <h3 class="text-lg font-bold text-gray-800 mb-4">Buat Pengumuman</h3>
+            <form method="POST" action="{{ route('guru.pengumuman', $classroom) }}" x-data="{ submitting: false }" @submit="submitting = true">
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                 @csrf
                 <div class="space-y-4">
                     <div>
@@ -474,6 +551,7 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Isi Pengumuman</label>
+<<<<<<< HEAD
                         <input id="content-create" type="hidden" name="content">
                         <trix-editor input="content-create" class="trix-content bg-white rounded-xl min-h-[150px]"></trix-editor>
                     </div>
@@ -481,6 +559,14 @@
                         <button type="button" onclick="document.getElementById('modal-pengumuman').classList.add('hidden')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors">Batal</button>
                         <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors">Simpan</button>
                     </div>
+=======
+                        <textarea name="content" class="w-full border rounded-xl px-3 py-2" rows="3" required></textarea>
+                    </div>
+                    <button :disabled="submitting" class="w-full bg-blue-600 text-white rounded-xl py-2 font-medium disabled:opacity-70">
+                        <span x-show="!submitting">Kirim Pengumuman</span>
+                        <span x-show="submitting">Memproses...</span>
+                    </button>
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                 </div>
             </form>
         </div>
@@ -595,10 +681,14 @@
                                     $kuisDone = $classroom->quizzes->filter(fn($q) => $q->attempts->where('student_id', $member->id)->isNotEmpty())->count();
                                 @endphp
                                 <tr>
+<<<<<<< HEAD
                                     <td class="p-2 text-sm text-gray-800 font-medium cursor-pointer hover:text-blue-600 hover:underline transition-colors" 
                                         @click="showProfile = true; profileData = { name: '{{ addslashes($member->name) }}', email: '{{ addslashes($member->email) }}', code: '{{ $member->student_code ?? 'Belum ada ID' }}', avatarUrl: '{{ $member->foto ? Storage::url($member->foto) : '' }}' }">
                                         {{ $member->name }}
                                     </td>
+=======
+                                    <td class="p-2 text-sm text-gray-800 font-medium">{{ $member->name }}</td>
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                                     <td class="p-2 text-center">
                                         <span class="text-xs font-bold {{ $tugasDone == $tugasCount && $tugasCount > 0 ? 'text-green-600' : ($tugasDone == 0 && $tugasCount > 0 ? 'text-red-500' : 'text-orange-500') }} bg-gray-50 px-2 py-1 rounded border border-gray-100">
                                             {{ $tugasDone }}/{{ $tugasCount }}
@@ -626,6 +716,7 @@
             </form>
         </div>
     </div>
+<<<<<<< HEAD
     @foreach($classroom->groups as $group)
     <!-- Modal Edit Kelompok -->
     <div id="modal-edit-kelompok-{{ $group->id }}" class="fixed inset-0 z-50 hidden bg-gray-900/50 backdrop-blur-sm flex items-center justify-center p-4">
@@ -726,4 +817,6 @@
         }
     </script>
     @endpush
+=======
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
 </x-layouts.app>

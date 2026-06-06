@@ -10,6 +10,7 @@
             </div>
             <p class="text-sm text-gray-500 ml-9">Pantau rata-rata nilai, persentase kehadiran, dan siswa berisiko.</p>
         </div>
+<<<<<<< HEAD
         <form method="POST" action="{{ route('guru.ews.analisis', $classroom) }}">
             @csrf
             <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-xl font-semibold shadow-sm flex items-center gap-2 transition-colors">
@@ -17,6 +18,8 @@
                 Jalankan Analisis EWS
             </button>
         </form>
+=======
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
     </div>
 
     <!-- Statistik Utama -->
@@ -38,7 +41,11 @@
             foreach($data as $d) {
                 $totalNilai += $d['avgNilai'];
                 $totalPresensi += $d['presensi'];
+<<<<<<< HEAD
                 if($d['risk']) {
+=======
+                if($d['avgNilai'] < 70 || $d['presensi'] < 75) {
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                     $siswaBerisiko++;
                 }
             }
@@ -114,6 +121,7 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-center">
+<<<<<<< HEAD
                                 @if($d['risk'])
                                     <div class="flex flex-col items-center gap-2">
                                         <div class="flex items-center justify-center gap-2">
@@ -126,6 +134,17 @@
                                             </button>
                                         </div>
                                         <p class="text-[10px] text-red-500 font-medium max-w-[150px] truncate" title="{{ $d['risk']->reason }}">{{ $d['risk']->reason }}</p>
+=======
+                                @if($d['avgNilai'] < 70 || $d['presensi'] < 75)
+                                    <div class="flex items-center justify-center gap-2">
+                                        <span class="inline-flex items-center gap-1 px-3 py-1 bg-red-50 text-red-600 rounded-full text-xs font-bold">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                            Berisiko
+                                        </span>
+                                        <button onclick="openRemedialModal({{ $d['student']->id }}, '{{ addslashes($d['student']->name) }}')" class="p-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow-sm tooltip" title="Tindak Lanjut Akademik (Remedial)">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                        </button>
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                                     </div>
                                 @else
                                     <span class="inline-flex items-center gap-1 px-3 py-1 bg-green-50 text-green-600 rounded-full text-xs font-bold">
@@ -145,6 +164,7 @@
         </div>
     </div>
 
+<<<<<<< HEAD
     <!-- Rekapitulasi Kehadiran -->
     <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden mb-8">
         <div class="p-6 border-b border-gray-100">
@@ -190,6 +210,8 @@
     </div>
 
 
+=======
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
     <!-- Modal Remedial -->
     <div id="modal-remedial" class="fixed inset-0 z-50 hidden bg-gray-900/50 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl w-full max-w-md p-8 shadow-xl relative">
@@ -203,6 +225,7 @@
 
             <form method="POST" action="{{ route('guru.remedial') }}" x-data="{ submitting: false }" @submit="submitting = true">
                 @csrf
+<<<<<<< HEAD
                 <input type="hidden" name="class_id" value="{{ $classroom->id }}">
                 <input type="hidden" name="student_id" id="remedial-student-id">
                 <div class="space-y-4">
@@ -231,6 +254,18 @@
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-1.5">Catatan Program (Opsional)</label>
                         <textarea name="note" rows="3" class="w-full border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 text-sm" placeholder="Contoh: kerjakan ulang latihan pecahan + kumpulkan ulang tugas..."></textarea>
+=======
+                <input type="hidden" name="student_id" id="remedial-student-id">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">Pilih Tugas Asli (Opsional)</label>
+                        <select name="assignment_id" class="w-full border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 text-sm">
+                            <option value="">-- Hanya Remedial Umum --</option>
+                            @foreach($classroom->assignments as $assignment)
+                                <option value="{{ $assignment->id }}">{{ $assignment->title }}</option>
+                            @endforeach
+                        </select>
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-1.5">Batas Waktu (Deadline)</label>

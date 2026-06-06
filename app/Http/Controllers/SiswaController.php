@@ -7,7 +7,10 @@ use App\Models\Classroom;
 use App\Models\Question;
 use App\Models\Quiz;
 use App\Models\QuizAttempt;
+<<<<<<< HEAD
 use App\Models\RemedialTask;
+=======
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
 use App\Models\Submission;
 use Illuminate\Http\Request;
 
@@ -19,12 +22,16 @@ class SiswaController extends Controller
     {
         $user = auth()->user();
         $classes = $user->memberClasses()->where('is_hidden', false)->get();
+<<<<<<< HEAD
         $riskFlags = \App\Models\RiskFlag::where('student_id', $user->id)
             ->where('status', 'open')
             ->with('classroom')
             ->get();
             
         return view('dashboard-siswa', compact('classes', 'riskFlags'));
+=======
+        return view('dashboard-siswa', compact('classes'));
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
     }
 
     public function joinKelas(Request $request)
@@ -39,6 +46,7 @@ class SiswaController extends Controller
     {
         abort_unless($classroom->members->contains(auth()->id()), 403);
         abort_if($classroom->is_hidden, 404, 'Kelas sedang disembunyikan.');
+<<<<<<< HEAD
 
         $classroom->load(['materials', 'announcements', 'assignments.questionBankReferences', 'quizzes']);
 
@@ -57,11 +65,16 @@ class SiswaController extends Controller
             ->keyBy('quiz_id');
 
         return view('kelas.show-siswa', compact('classroom', 'remedials', 'remedialQuizzes'));
+=======
+        $classroom->load(['materials', 'announcements', 'assignments', 'quizzes']);
+        return view('kelas.show-siswa', compact('classroom'));
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
     }
 
     public function submissionTugas(Request $request, Assignment $assignment)
     {
         $request->validate(['file' => 'required|file|max:4096']);
+<<<<<<< HEAD
 
         $assignment->loadMissing('classroom.members');
         abort_unless($assignment->classroom->members->contains(auth()->id()), 403);
@@ -81,11 +94,15 @@ class SiswaController extends Controller
             }
         }
 
+=======
+        $submittedAt = now();
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
         Submission::updateOrCreate(
             ['assignment_id' => $assignment->id, 'student_id' => auth()->id()],
             [
                 'file_path' => $request->file('file')->store('submissions', 'public'),
                 'submitted_at' => $submittedAt,
+<<<<<<< HEAD
                 'status' => $remedial ? 'REMEDIAL' : 'TEPAT_WAKTU',
             ]
         );
@@ -95,6 +112,12 @@ class SiswaController extends Controller
         }
 
         return back()->with('success', $remedial ? 'Tugas dikumpulkan (remedial).' : 'Tugas dikumpulkan.');
+=======
+                'status' => $submittedAt->gt($assignment->deadline) ? 'TERLAMBAT' : 'TEPAT_WAKTU',
+            ]
+        );
+        return back()->with('success', 'Tugas dikumpulkan.');
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
     }
 
     public function kerjakanKuis(Request $request, Quiz $quiz)
@@ -109,7 +132,11 @@ class SiswaController extends Controller
                 }
             }
             $score = $questions->count() ? ($correct / $questions->count()) * 100 : 0;
+<<<<<<< HEAD
             $attempt = QuizAttempt::create([
+=======
+            QuizAttempt::create([
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                 'quiz_id' => $quiz->id,
                 'student_id' => auth()->id(),
                 'score' => $score,
@@ -117,6 +144,7 @@ class SiswaController extends Controller
                 'submitted_at' => now(),
                 'answers_json' => $answers,
             ]);
+<<<<<<< HEAD
 
             $remedial = RemedialTask::where('student_id', auth()->id())
                 ->where('quiz_id', $quiz->id)
@@ -131,6 +159,9 @@ class SiswaController extends Controller
             \App\Services\EWSService::analyzeStudent(auth()->id(), $quiz->class_id);
 
             return redirect()->route('siswa.nilai')->with('success', $remedial ? 'Kuis (Remedial) selesai.' : 'Kuis selesai.');
+=======
+            return redirect()->route('siswa.nilai')->with('success', 'Kuis selesai.');
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
         }
 
         return view('kuis.kerjakan', ['quiz' => $quiz->load('questions')]);
@@ -151,7 +182,10 @@ class SiswaController extends Controller
                 $q->where('is_hidden', false);
             })
             ->with('quiz.classroom')
+<<<<<<< HEAD
             ->orderByDesc('created_at')
+=======
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
             ->get();
 
         return view('tugas.submission', compact('assignmentScores', 'quizScores'));

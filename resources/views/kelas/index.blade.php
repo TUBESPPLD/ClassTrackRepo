@@ -16,6 +16,7 @@
                 <div class="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-bl-full -z-10 group-hover:scale-110 transition-transform"></div>
                 
                 <div class="flex items-start justify-between mb-4">
+<<<<<<< HEAD
                     @if($class->cover_image)
                         <div class="w-14 h-14 rounded-2xl bg-gray-100 flex items-center justify-center border-2 border-white shadow-sm overflow-hidden shrink-0">
                             <img src="{{ str_starts_with($class->cover_image, 'http') ? $class->cover_image : Storage::url($class->cover_image) }}" class="w-full h-full object-cover">
@@ -25,6 +26,11 @@
                             {{ strtoupper(substr($class->name, 0, 1)) }}
                         </div>
                     @endif
+=======
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-100 to-indigo-100 text-blue-600 flex items-center justify-center font-bold text-xl border-2 border-white shadow-sm">
+                        {{ strtoupper(substr($class->name, 0, 1)) }}
+                    </div>
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                     
                     <!-- Dropdown Actions -->
                     <div x-data="{ open: false }" class="relative">
@@ -41,9 +47,15 @@
                                 </button>
                             </form>
 
+<<<<<<< HEAD
                             <form method="POST" action="{{ route('guru.kelas.delete', $class) }}" id="form-delete-kelas-{{ $class->id }}">
                                 @csrf @method('DELETE')
                                 <button type="button" onclick="confirmDelete('form-delete-kelas-{{ $class->id }}', 'Apakah Anda yakin ingin menghapus kelas ini beserta seluruh datanya?')" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">Hapus Kelas</button>
+=======
+                            <form method="POST" action="{{ route('guru.kelas.delete', $class) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kelas ini beserta seluruh datanya?');">
+                                @csrf @method('DELETE')
+                                <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">Hapus Kelas</button>
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                             </form>
                         </div>
                     </div>
@@ -95,7 +107,11 @@
                 <p class="text-sm text-gray-500 mt-1">Isi detail kelas yang akan Anda buat.</p>
             </div>
 
+<<<<<<< HEAD
             <form method="POST" action="{{ route('guru.kelas') }}" enctype="multipart/form-data" x-data="{ submitting: false }" @submit="submitting = true">
+=======
+            <form method="POST" action="{{ route('guru.kelas') }}" x-data="{ submitting: false }" @submit="submitting = true">
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                 @csrf
                 <div class="space-y-5">
                     <div>
@@ -107,6 +123,7 @@
                         <textarea name="description" placeholder="Deskripsi singkat mengenai kelas ini..." class="w-full border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 hover:bg-white focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" rows="3"></textarea>
                     </div>
                     <div>
+<<<<<<< HEAD
                         <label class="block text-sm font-semibold text-gray-700 mb-1.5">Cover Kelas (Pilih File ATAU masukkan URL)</label>
                         <div class="space-y-3">
                             <input name="cover_image_file" type="file" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-all">
@@ -115,6 +132,10 @@
                                 <input name="cover_image_url" type="url" placeholder="https://images.unsplash.com/..." class="flex-1 border border-gray-200 rounded-xl px-3 py-2 bg-gray-50 hover:bg-white focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm">
                             </div>
                         </div>
+=======
+                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">URL Gambar Cover (Opsional)</label>
+                        <input name="cover_image" type="url" placeholder="https://images.unsplash.com/..." class="w-full border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 hover:bg-white focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                     </div>
                     <button :disabled="submitting" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl py-3.5 font-bold hover:shadow-lg hover:shadow-blue-500/30 transition-all transform hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed">
                         <span x-show="!submitting">Simpan & Buat Kelas</span>
@@ -142,7 +163,11 @@
                 <p class="text-sm text-gray-500 mt-1">Ubah detail ruang kelas Anda.</p>
             </div>
 
+<<<<<<< HEAD
             <form method="POST" :action="`/guru/kelas/${id}`" enctype="multipart/form-data" x-data="{ submitting: false }" @submit="submitting = true">
+=======
+            <form method="POST" :action="`/guru/kelas/${id}`" x-data="{ submitting: false }" @submit="submitting = true">
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                 @csrf
                 @method('PUT')
                 <div class="space-y-5">
@@ -155,6 +180,7 @@
                         <textarea name="description" x-model="description" class="w-full border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 hover:bg-white focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" rows="3"></textarea>
                     </div>
                     <div>
+<<<<<<< HEAD
                         <label class="block text-sm font-semibold text-gray-700 mb-1.5">Cover Kelas (Ganti File ATAU ubah URL)</label>
                         <div class="space-y-3">
                             <input name="cover_image_file" type="file" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-all">
@@ -163,6 +189,10 @@
                                 <input name="cover_image_url" type="url" x-model="cover_image" placeholder="https://images.unsplash.com/..." class="flex-1 border border-gray-200 rounded-xl px-3 py-2 bg-gray-50 hover:bg-white focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm">
                             </div>
                         </div>
+=======
+                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">URL Gambar Cover (Opsional)</label>
+                        <input name="cover_image" type="url" x-model="cover_image" class="w-full border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 hover:bg-white focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                     </div>
                     <button :disabled="submitting" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl py-3.5 font-bold hover:shadow-lg hover:shadow-blue-500/30 transition-all transform hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed">
                         <span x-show="!submitting">Simpan Perubahan</span>

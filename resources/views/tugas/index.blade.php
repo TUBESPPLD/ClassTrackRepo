@@ -24,6 +24,7 @@
                         <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
                         </div>
+<<<<<<< HEAD
                         <div class="w-full flex justify-between items-start">
                             <div>
                                 <h3 class="font-bold text-gray-900 text-lg">{{ $tugas->title }}</h3>
@@ -42,6 +43,13 @@
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                     </button>
                                 </form>
+=======
+                        <div>
+                            <h3 class="font-bold text-gray-900 text-lg">{{ $tugas->title }}</h3>
+                            <div class="flex items-center gap-2 text-xs font-medium text-red-500">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                Tenggat: {{ \Carbon\Carbon::parse($tugas->deadline)->format('d M Y H:i') }}
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                             </div>
                         </div>
                     </div>
@@ -52,6 +60,7 @@
                             Lihat File Lampiran Soal
                         </a>
                     @endif
+<<<<<<< HEAD
 
                     @if(($tugas->questionBankReferences ?? collect())->count() > 0)
                         <div class="mt-3 p-3 bg-gray-50 border border-gray-100 rounded-xl">
@@ -66,6 +75,8 @@
                             @endif
                         </div>
                     @endif
+=======
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                 </div>
 
                 <!-- Submissions Area -->
@@ -149,6 +160,7 @@
                         <label class="block text-sm font-semibold text-gray-700 mb-1.5">File Lampiran (Opsional)</label>
                         <input type="file" name="file" class="w-full border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 hover:bg-white focus:bg-white text-sm transition-all">
                     </div>
+<<<<<<< HEAD
 
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-1.5">Referensi Bank Soal (Opsional)</label>
@@ -166,6 +178,8 @@
                         @endif
                     </div>
 
+=======
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                     <div class="pt-2">
                         <button type="submit" :disabled="submitting" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl py-3.5 font-bold hover:shadow-lg hover:shadow-blue-500/30 transition-all transform hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed">
                             <span x-show="!submitting">Simpan & Terbitkan</span>
@@ -176,6 +190,7 @@
             </form>
         </div>
     </div>
+<<<<<<< HEAD
     @foreach(($assignments ?? []) as $tugas)
     <!-- Modal Edit Tugas -->
     <div id="modal-edit-tugas-{{ $tugas->id }}" class="fixed inset-0 z-50 hidden bg-gray-900/50 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
@@ -214,4 +229,6 @@
         </div>
     </div>
     @endforeach
+=======
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
 </x-layouts.app>

@@ -61,9 +61,15 @@
                             </td>
                             <td class="px-6 py-4 text-center">
                                 @if($user->id !== auth()->id())
+<<<<<<< HEAD
                                     <form method="POST" action="{{ route('admin.users.delete', $user) }}" id="form-delete-user-{{ $user->id }}">
                                         @csrf @method('DELETE')
                                         <button type="button" onclick="confirmDelete('form-delete-user-{{ $user->id }}', 'Yakin ingin menghapus pengguna ini secara permanen?')" class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors tooltip" title="Hapus Pengguna">
+=======
+                                    <form method="POST" action="{{ route('admin.users.delete', $user) }}" onsubmit="return confirm('Yakin ingin menghapus pengguna ini secara permanen?');">
+                                        @csrf @method('DELETE')
+                                        <button class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors tooltip" title="Hapus Pengguna">
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                         </button>
                                     </form>

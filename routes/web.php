@@ -16,6 +16,7 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 });
 
+<<<<<<< HEAD
 use App\Http\Controllers\ProfileController;
 
 Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
@@ -24,6 +25,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
+=======
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
@@ -42,6 +46,7 @@ Route::middleware(['auth', 'guru'])->prefix('guru')->name('guru.')->group(functi
     Route::put('/kelas/{classroom}', [GuruController::class, 'updateKelas'])->name('kelas.update');
     Route::patch('/kelas/{classroom}/toggle-visibility', [GuruController::class, 'toggleVisibility'])->name('kelas.toggle-visibility');
     Route::delete('/kelas/{classroom}', [GuruController::class, 'deleteKelas'])->name('kelas.delete');
+<<<<<<< HEAD
 
     Route::post('/kelas/{classroom}/anggota', [GuruController::class, 'anggotaKelas'])->name('anggota');
     Route::post('/kelas/{classroom}/kelompok', [GuruController::class, 'kelompok'])->name('kelompok');
@@ -72,6 +77,17 @@ Route::middleware(['auth', 'guru'])->prefix('guru')->name('guru.')->group(functi
     Route::get('/kelas/{classroom}/monitoring', [GuruController::class, 'monitoring'])->name('monitoring');
     Route::post('/kelas/{classroom}/ews', [GuruController::class, 'analisisRisiko'])->name('ews.analisis');
 
+=======
+    Route::post('/kelas/{classroom}/anggota', [GuruController::class, 'anggotaKelas'])->name('anggota');
+    Route::post('/kelas/{classroom}/kelompok', [GuruController::class, 'kelompok'])->name('kelompok');
+    Route::post('/kelas/{classroom}/materi', [GuruController::class, 'materi'])->name('materi');
+    Route::post('/kelas/{classroom}/pengumuman', [GuruController::class, 'pengumuman'])->name('pengumuman');
+    Route::match(['get', 'post'], '/kelas/{classroom}/tugas', [GuruController::class, 'tugas'])->name('tugas');
+    Route::post('/nilai/{submission}', [GuruController::class, 'nilai'])->name('nilai');
+    Route::match(['get', 'post'], '/kelas/{classroom}/kuis', [GuruController::class, 'kuis'])->name('kuis');
+    Route::post('/kelas/{classroom}/presensi', [GuruController::class, 'presensi'])->name('presensi');
+    Route::get('/kelas/{classroom}/monitoring', [GuruController::class, 'monitoring'])->name('monitoring');
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
     Route::post('/remedial', [GuruController::class, 'remedial'])->name('remedial');
 });
 
@@ -86,7 +102,10 @@ Route::middleware(['auth'])->prefix('siswa')->name('siswa.')->group(function () 
 
 Route::middleware(['auth'])->prefix('wali')->name('wali.')->group(function () {
     Route::get('/dashboard', [WaliController::class, 'dashboardAnak'])->name('dashboard');
+<<<<<<< HEAD
     Route::post('/link-student', [WaliController::class, 'linkStudent'])->name('link-student');
+=======
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
 });
 
 

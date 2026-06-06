@@ -36,6 +36,7 @@ class GuruController extends Controller
             $data = $request->validate([
                 'name' => 'required', 
                 'description' => 'nullable',
+<<<<<<< HEAD
                 'cover_image_url' => 'nullable|url',
                 'cover_image_file' => 'nullable|image|max:4096'
             ]);
@@ -51,6 +52,12 @@ class GuruController extends Controller
                 'name' => $data['name'],
                 'description' => $data['description'] ?? null,
                 'cover_image' => $coverImage,
+=======
+                'cover_image' => 'nullable|url'
+            ]);
+            Classroom::create([
+                ...$data,
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                 'class_code' => 'CLS-' . strtoupper(Str::random(6)),
                 'created_by' => auth()->id(),
             ]);
@@ -70,6 +77,7 @@ class GuruController extends Controller
     public function updateKelas(Request $request, Classroom $classroom)
     {
         abort_if($classroom->created_by !== auth()->id(), 403);
+<<<<<<< HEAD
         $data = $request->validate([
             'name' => 'required', 
             'description' => 'nullable',
@@ -95,6 +103,13 @@ class GuruController extends Controller
             'description' => $data['description'] ?? null,
             'cover_image' => $coverImage
         ]);
+=======
+        $classroom->update($request->validate([
+            'name' => 'required', 
+            'description' => 'nullable',
+            'cover_image' => 'nullable|url'
+        ]));
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
         return back()->with('success', 'Kelas diperbarui.');
     }
 
@@ -170,6 +185,7 @@ class GuruController extends Controller
         return back()->with('success', 'Materi diunggah.');
     }
 
+<<<<<<< HEAD
     public function updateMateri(Request $request, Material $material)
     {
         $classroom = Classroom::findOrFail($material->class_id);
@@ -214,6 +230,8 @@ class GuruController extends Controller
         return back()->with('success', 'Materi dihapus.');
     }
 
+=======
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
     public function pengumuman(Request $request, Classroom $classroom)
     {
         $data = $request->validate(['title' => 'required', 'content' => 'required']);
@@ -221,6 +239,7 @@ class GuruController extends Controller
         return back()->with('success', 'Pengumuman dibuat.');
     }
 
+<<<<<<< HEAD
     public function updatePengumuman(Request $request, Classroom $classroom, Announcement $announcement)
     {
         abort_if($classroom->created_by !== auth()->id() || $announcement->class_id !== $classroom->id, 403);
@@ -240,6 +259,10 @@ class GuruController extends Controller
     {
         abort_if($classroom->created_by !== auth()->id(), 403);
 
+=======
+    public function tugas(Request $request, Classroom $classroom)
+    {
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
         if ($request->isMethod('post')) {
             $data = $request->validate([
                 'title' => 'required',
@@ -247,11 +270,16 @@ class GuruController extends Controller
                 'description' => 'nullable',
                 'deadline' => 'required|date',
                 'file' => 'nullable|file|max:4096',
+<<<<<<< HEAD
                 'question_bank_ids' => 'nullable|array',
                 'question_bank_ids.*' => 'integer|exists:question_bank_questions,id',
             ]);
 
             $assignment = Assignment::create([
+=======
+            ]);
+            Assignment::create([
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                 'title' => $data['title'],
                 'segment' => $data['segment'] ?? null,
                 'description' => $data['description'] ?? null,
@@ -260,6 +288,7 @@ class GuruController extends Controller
                 'class_id' => $classroom->id,
                 'created_by' => auth()->id(),
             ]);
+<<<<<<< HEAD
 
             $qbIds = array_values(array_unique($data['question_bank_ids'] ?? []));
             if (count($qbIds) > 0) {
@@ -289,6 +318,12 @@ class GuruController extends Controller
             ->get();
 
         return view('tugas.index', compact('assignments', 'classroom', 'bankQuestions'));
+=======
+            return back()->with('success', 'Tugas dibuat.');
+        }
+
+        return view('tugas.index', ['assignments' => Assignment::where('class_id', $classroom->id)->latest()->get(), 'classroom' => $classroom]);
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
     }
 
     public function nilai(Request $request, Submission $submission)
@@ -297,6 +332,7 @@ class GuruController extends Controller
             'grade' => 'required|numeric|min:0|max:100',
             'feedback' => 'nullable|string',
         ]));
+<<<<<<< HEAD
 
         // Automatically trigger EWS analysis for this student
         \App\Services\EWSService::analyzeStudent($submission->student_id, $submission->assignment->class_id);
@@ -388,6 +424,24 @@ class GuruController extends Controller
                     'quiz_id' => $quiz->id,
                     'question_text' => $questionText,
                     'image_path' => $imagePath,
+=======
+        return back()->with('success', 'Nilai disimpan.');
+    }
+
+    public function kuis(Request $request, Classroom $classroom)
+    {
+        if ($request->isMethod('post')) {
+            $data = $request->validate([
+                'title' => 'required', 
+                'segment' => 'nullable|string',
+                'duration_minutes' => 'required|integer|min:1'
+            ]);
+            $quiz = Quiz::create([...$data, 'class_id' => $classroom->id, 'created_by' => auth()->id()]);
+            foreach ($request->input('questions', []) as $row) {
+                Question::create([
+                    'quiz_id' => $quiz->id,
+                    'question_text' => $row['question'] ?? '',
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                     'option_a' => $row['options']['a'] ?? '',
                     'option_b' => $row['options']['b'] ?? '',
                     'option_c' => $row['options']['c'] ?? '',
@@ -395,6 +449,7 @@ class GuruController extends Controller
                     'correct_answer' => $row['correct'] ?? 'a',
                 ]);
             }
+<<<<<<< HEAD
 
             return back()->with('success', 'Kuis dibuat.');
         }
@@ -503,12 +558,19 @@ class GuruController extends Controller
         $question->delete();
 
         return back()->with('success', 'Soal dihapus.');
+=======
+            return back()->with('success', 'Kuis dibuat.');
+        }
+
+        return view('kuis.index', ['quizzes' => Quiz::where('class_id', $classroom->id)->with(['questions', 'attempts.student'])->withCount('questions')->get(), 'classroom' => $classroom]);
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
     }
 
     public function presensi(Request $request, Classroom $classroom)
     {
         foreach ($request->input('records', []) as $studentId => $status) {
             Attendance::updateOrCreate(
+<<<<<<< HEAD
                 ['class_id' => $classroom->id, 'student_id' => $studentId, 'date' => now()->startOfDay()],
                 ['status' => $status]
             );
@@ -517,17 +579,27 @@ class GuruController extends Controller
         // Automatically trigger EWS analysis for all students in this class
         \App\Services\EWSService::analyzeClass($classroom->id);
 
+=======
+                ['class_id' => $classroom->id, 'student_id' => $studentId, 'date' => now()->toDateString()],
+                ['status' => $status]
+            );
+        }
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
         return back()->with('success', 'Presensi tersimpan.');
     }
 
     public function monitoring(Classroom $classroom)
     {
+<<<<<<< HEAD
         abort_if($classroom->created_by !== auth()->id(), 403);
 
+=======
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
         $students = $classroom->members()->where('role', 'siswa')->get();
         $labels = [];
         $scores = [];
         $attRates = [];
+<<<<<<< HEAD
         $data = [];
 
         foreach ($students as $student) {
@@ -577,11 +649,24 @@ class GuruController extends Controller
         }
 
         return view('monitoring.index', compact('classroom', 'labels', 'scores', 'attRates', 'data'));
+=======
+        foreach ($students as $student) {
+            $labels[] = $student->name;
+            $scores[] = Submission::where('student_id', $student->id)
+                ->whereHas('assignment', fn ($q) => $q->where('class_id', $classroom->id))
+                ->avg('grade') ?? 0;
+            $total = Attendance::where('class_id', $classroom->id)->where('student_id', $student->id)->count();
+            $hadir = Attendance::where('class_id', $classroom->id)->where('student_id', $student->id)->where('status', 'hadir')->count();
+            $attRates[] = $total > 0 ? round(($hadir / $total) * 100, 2) : 0;
+        }
+        return view('monitoring.index', compact('classroom', 'labels', 'scores', 'attRates'));
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
     }
 
     public function remedial(Request $request)
     {
         $data = $request->validate([
+<<<<<<< HEAD
             'class_id' => 'required|exists:classes,id',
             'student_id' => 'required|exists:users,id',
             'assignment_ids' => 'nullable|array',
@@ -807,5 +892,13 @@ class GuruController extends Controller
         abort_if($classroom->created_by !== auth()->id(), 403);
         $quiz->delete();
         return back()->with('success', 'Kuis berhasil dihapus.');
+=======
+            'assignment_id' => 'nullable|exists:assignments,id',
+            'student_id' => 'required|exists:users,id',
+            'deadline' => 'required|date',
+        ]);
+        RemedialTask::create([...$data, 'created_by' => auth()->id(), 'status' => 'assigned']);
+        return back()->with('success', 'Remedial diberikan.');
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
     }
 }

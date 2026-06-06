@@ -4,6 +4,7 @@
         <p class="text-sm text-gray-500 mt-1">Gabung ke kelas baru dan pantau perkembangan belajar Anda.</p>
     </div>
 
+<<<<<<< HEAD
     @if(($riskFlags ?? collect())->count() > 0)
         <div class="mb-8 bg-red-50 border border-red-100 rounded-3xl p-6 relative overflow-hidden">
             <div class="absolute top-0 right-0 p-4 opacity-10">
@@ -34,6 +35,8 @@
         </div>
     @endif
 
+=======
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
     <!-- Join Class Card -->
     <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 mb-8 max-w-xl">
         <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
@@ -61,6 +64,7 @@
             <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all group relative overflow-hidden">
                 <div class="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-bl-full -z-10 group-hover:scale-110 transition-transform"></div>
                 <div class="flex items-start justify-between mb-4">
+<<<<<<< HEAD
                     @if($class->cover_image)
                         <div class="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center border border-white shadow-sm overflow-hidden shrink-0">
                             <img src="{{ str_starts_with($class->cover_image, 'http') ? $class->cover_image : Storage::url($class->cover_image) }}" class="w-full h-full object-cover">
@@ -70,6 +74,11 @@
                             {{ strtoupper(substr($class->name, 0, 1)) }}
                         </div>
                     @endif
+=======
+                    <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-lg">
+                        {{ strtoupper(substr($class->name, 0, 1)) }}
+                    </div>
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                     <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">{{ $class->class_code }}</span>
                 </div>
                 <h3 class="text-xl font-bold text-gray-900 mb-1">{{ $class->name }}</h3>

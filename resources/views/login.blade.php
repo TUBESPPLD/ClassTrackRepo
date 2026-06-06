@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - ClassTrack</title>
     <script src="https://cdn.tailwindcss.com"></script>
+<<<<<<< HEAD
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+=======
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
@@ -62,7 +65,11 @@
                 </div>
             @endif
 
+<<<<<<< HEAD
             <form method="POST" action="{{ route('login.post') }}" class="space-y-5" x-data="{ submitting: false }" @submit="submitting = true">
+=======
+            <form method="POST" action="{{ route('login.post') }}" class="space-y-5">
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                 @csrf
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
@@ -74,6 +81,7 @@
                     <input name="password" type="password" placeholder="••••••••" class="w-full border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all bg-gray-50/50 hover:bg-white" required>
                 </div>
 
+<<<<<<< HEAD
                 <div class="pt-2 relative">
                     <button type="submit" :disabled="submitting" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold py-3 px-4 rounded-xl hover:shadow-lg hover:shadow-blue-500/30 transition-all transform hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed">
                         <span x-show="!submitting">Masuk</span>
@@ -100,6 +108,14 @@
                     });
                 });
             </script>
+=======
+                <div class="pt-2">
+                    <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold py-3 px-4 rounded-xl hover:shadow-lg hover:shadow-blue-500/30 transition-all transform hover:-translate-y-0.5">
+                        Masuk
+                    </button>
+                </div>
+            </form>
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
 
             <div class="mt-8 text-center">
                 <p class="text-sm text-gray-600">

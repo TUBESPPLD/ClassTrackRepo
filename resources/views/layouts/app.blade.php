@@ -7,7 +7,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<<<<<<< HEAD
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+=======
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
@@ -28,6 +31,7 @@
 </head>
 <body class="bg-[#f4f7fb] text-gray-800 antialiased" x-data="{ sidebarOpen: false }">
 
+<<<<<<< HEAD
     <!-- Global SweetAlert2 Notification Handlers -->
     @if(session('success'))
         <script>
@@ -84,6 +88,44 @@
             });
         </script>
     @endif
+=======
+    <!-- Global Toast Notification Container -->
+    <div class="fixed top-6 right-6 z-[60] flex flex-col gap-3 pointer-events-none w-full max-w-sm">
+        @if(session('success'))
+            <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)" 
+                 x-transition:enter="toast-enter" x-transition:leave="toast-leave"
+                 class="bg-white border-l-4 border-green-500 rounded-xl p-4 shadow-xl pointer-events-auto flex gap-3 items-start relative overflow-hidden">
+                <div class="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                </div>
+                <div class="flex-1">
+                    <h4 class="text-sm font-bold text-gray-900">Berhasil!</h4>
+                    <p class="text-xs text-gray-500 mt-0.5">{{ session('success') }}</p>
+                </div>
+                <button @click="show = false" class="text-gray-400 hover:text-gray-600 transition-colors">&times;</button>
+            </div>
+        @endif
+        
+        @if($errors->any())
+            <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 7000)" 
+                 x-transition:enter="toast-enter" x-transition:leave="toast-leave"
+                 class="bg-white border-l-4 border-red-500 rounded-xl p-4 shadow-xl pointer-events-auto flex gap-3 items-start relative overflow-hidden">
+                <div class="w-8 h-8 rounded-full bg-red-50 flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+                </div>
+                <div class="flex-1">
+                    <h4 class="text-sm font-bold text-gray-900">Terdapat Kesalahan</h4>
+                    <ul class="list-disc list-inside text-xs mt-1 text-gray-500 space-y-0.5">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                <button @click="show = false" class="text-gray-400 hover:text-gray-600 transition-colors">&times;</button>
+            </div>
+        @endif
+    </div>
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
 
     <div class="flex h-screen overflow-hidden">
         
@@ -207,6 +249,7 @@
             </main>
         </div>
     </div>
+<<<<<<< HEAD
     <script>
         window.confirmDelete = function(formId, text = 'Anda yakin ingin menghapus data ini?') {
             Swal.fire({
@@ -254,5 +297,7 @@
             });
         };
     </script>
+=======
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
 </body>
 </html>

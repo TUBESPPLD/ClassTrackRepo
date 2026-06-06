@@ -4,7 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+<<<<<<< HEAD
     "content-hash": "6c1e262df6ccc63f73c903dfa35f4ee0",
+=======
+    "content-hash": "53b5d56b3b7e3cbac1713e68c8850f6c",
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
     "packages": [
         {
             "name": "brick/math",
@@ -6197,6 +6201,7 @@
             "time": "2025-04-30T06:54:44+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "laravel/dusk",
             "version": "v8.6.0",
             "source": {
@@ -6271,6 +6276,8 @@
             "time": "2026-04-15T14:50:40+00:00"
         },
         {
+=======
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
             "name": "laravel/pail",
             "version": "v1.2.6",
             "source": {
@@ -6839,6 +6846,7 @@
             "time": "2022-02-21T01:04:05+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "php-webdriver/webdriver",
             "version": "1.16.0",
             "source": {
@@ -6905,6 +6913,8 @@
             "time": "2025-12-28T23:57:40+00:00"
         },
         {
+=======
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
             "name": "phpunit/php-code-coverage",
             "version": "11.0.12",
             "source": {

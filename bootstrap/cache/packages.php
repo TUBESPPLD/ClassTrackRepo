@@ -1,4 +1,5 @@
 <?php return array (
+<<<<<<< HEAD
   'laravel/dusk' => 
   array (
     'providers' => 
@@ -6,6 +7,8 @@
       0 => 'Laravel\\Dusk\\DuskServiceProvider',
     ),
   ),
+=======
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
   'laravel/pail' => 
   array (
     'providers' => 

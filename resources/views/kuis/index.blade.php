@@ -21,6 +21,7 @@
             <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col lg:flex-row gap-6">
                 <!-- Kuis Info -->
                 <div class="flex-1">
+<<<<<<< HEAD
                     <div class="flex justify-between items-start mb-4">
                         <div class="flex items-center gap-3">
                             <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
@@ -44,6 +45,18 @@
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                 </button>
                             </form>
+=======
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-900 text-lg">{{ $kuis->title }}</h3>
+                            <div class="flex items-center gap-2 text-xs font-medium text-purple-600">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                Durasi: {{ $kuis->duration_minutes }} Menit
+                            </div>
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                         </div>
                     </div>
 
@@ -55,12 +68,16 @@
                         <div class="space-y-3 max-h-40 overflow-y-auto pr-2">
                             @foreach($kuis->questions as $index => $q)
                                 <div class="text-sm">
+<<<<<<< HEAD
                                     <p class="font-medium text-gray-800">
                                         {{ $index+1 }}. {{ $q->question_text }}
                                         @if($q->question_bank_question_id)
                                             <span class="ml-2 text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700">Bank Soal</span>
                                         @endif
                                     </p>
+=======
+                                    <p class="font-medium text-gray-800">{{ $index+1 }}. {{ $q->question_text }}</p>
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                                     <ul class="ml-4 mt-1 space-y-1 text-xs text-gray-500">
                                         @foreach(['a','b','c','d'] as $opt)
                                             <li class="{{ $q->correct_answer == $opt ? 'text-green-600 font-semibold' : '' }}">
@@ -119,14 +136,22 @@
             
             <h3 class="text-2xl font-bold text-gray-900 mb-6">Buat Kuis Baru</h3>
 
+<<<<<<< HEAD
             <form method="POST" action="{{ route('guru.kuis', $classroom) }}" enctype="multipart/form-data" x-data="{ submitting: false, questions: [ { q: '', a:'', b:'', c:'', d:'', correct:'a' } ] }" @submit="submitting = true">
                 @csrf
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                     <div class="md:col-span-2">
+=======
+            <form method="POST" action="{{ route('guru.kuis', $classroom) }}" x-data="{ submitting: false, questions: [ { q: '', a:'', b:'', c:'', d:'', correct:'a' } ] }" @submit="submitting = true">
+                @csrf
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div>
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                         <label class="block text-sm font-semibold text-gray-700 mb-1.5">Judul Kuis <span class="text-red-500">*</span></label>
                         <input name="title" class="w-full border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 hover:bg-white focus:bg-white focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all text-sm" required>
                     </div>
                     <div>
+<<<<<<< HEAD
                         <label class="block text-sm font-semibold text-gray-700 mb-1.5">Durasi (Menit) <span class="text-red-500">*</span></label>
                         <input type="number" name="duration_minutes" class="w-full border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 hover:bg-white focus:bg-white focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all text-sm" required value="30" min="5">
                     </div>
@@ -154,6 +179,19 @@
 
                 <div class="mb-4">
                     <h4 class="font-semibold text-gray-800 border-b pb-2">Daftar Pertanyaan (Manual)</h4>
+=======
+                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">Segmen / Pertemuan</label>
+                        <input name="segment" placeholder="Pertemuan..." class="w-full border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 hover:bg-white focus:bg-white focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">Durasi (Menit) <span class="text-red-500">*</span></label>
+                        <input type="number" name="duration_minutes" class="w-full border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 hover:bg-white focus:bg-white focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all text-sm" required value="30" min="5">
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <h4 class="font-semibold text-gray-800 border-b pb-2">Daftar Pertanyaan</h4>
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                 </div>
 
                 <div class="space-y-6 max-h-96 overflow-y-auto pr-2">
@@ -164,12 +202,16 @@
                             </button>
                             
                             <label class="block text-sm font-semibold text-gray-700 mb-1">Pertanyaan <span x-text="index + 1"></span></label>
+<<<<<<< HEAD
                             <textarea :name="'questions['+index+'][question]'" x-model="item.q" class="w-full border rounded-lg px-3 py-2 text-sm mb-3" rows="2" required></textarea>
                             
                             <div class="mb-3">
                                 <label class="block text-xs font-semibold text-gray-700 mb-1">Upload Gambar Soal (Opsional, JPG/PNG)</label>
                                 <input type="file" :name="'questions['+index+'][image]'" accept=".jpg,.jpeg,.png" class="w-full border rounded-lg px-3 py-2 text-sm bg-white">
                             </div>
+=======
+                            <input type="text" :name="'questions['+index+'][question]'" x-model="item.q" class="w-full border rounded-lg px-3 py-2 text-sm mb-3" required>
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
                                 <div>
@@ -215,6 +257,7 @@
             </form>
         </div>
     </div>
+<<<<<<< HEAD
     @foreach(($quizzes ?? []) as $kuis)
     <!-- Modal Edit Kuis -->
     <div id="modal-edit-kuis-{{ $kuis->id }}" class="fixed inset-0 z-50 hidden bg-gray-900/50 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
@@ -328,4 +371,6 @@
         </div>
     </div>
     @endforeach
+=======
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
 </x-layouts.app>

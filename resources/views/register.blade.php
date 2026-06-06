@@ -86,6 +86,7 @@
             </div>
         </div>
     </div>
+<<<<<<< HEAD
     <script>
         // Global Cleanup Script for Overlays and Modals
         function forceCleanup() {
@@ -101,5 +102,7 @@
         window.addEventListener('pageshow', forceCleanup);
         document.addEventListener('DOMContentLoaded', forceCleanup);
     </script>
+=======
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
 </body>
 </html>

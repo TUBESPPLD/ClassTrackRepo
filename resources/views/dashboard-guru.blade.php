@@ -78,7 +78,11 @@
             <a href="{{ route('guru.kelas.show', $class) }}" class="block bg-white rounded-3xl shadow-sm border border-gray-100 hover:shadow-xl transition-all group overflow-hidden flex flex-col h-full transform hover:-translate-y-1">
                 <div class="h-40 w-full relative bg-gray-200 overflow-hidden">
                     @if($class->cover_image)
+<<<<<<< HEAD
                         <img src="{{ str_starts_with($class->cover_image, 'http') ? $class->cover_image : Storage::url($class->cover_image) }}" alt="Cover" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+=======
+                        <img src="{{ $class->cover_image }}" alt="Cover" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                     @else
                         <!-- Random abstract image related to learning -->
                         <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Default Cover" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80 mix-blend-multiply">

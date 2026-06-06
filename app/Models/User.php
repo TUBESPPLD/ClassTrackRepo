@@ -14,6 +14,7 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
+<<<<<<< HEAD
     protected static function booted()
     {
         static::creating(function ($user) {
@@ -31,6 +32,8 @@ class User extends Authenticatable
         });
     }
 
+=======
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
     /**
      * The attributes that are mass assignable.
      *
@@ -42,7 +45,10 @@ class User extends Authenticatable
         'password',
         'role',
         'foto',
+<<<<<<< HEAD
         'student_code',
+=======
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
     ];
 
     /**

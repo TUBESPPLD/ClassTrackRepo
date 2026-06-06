@@ -1,4 +1,5 @@
 <x-layouts.app :title="'Ruang Kelas - ' . $classroom->name">
+<<<<<<< HEAD
     @if($classroom->cover_image)
         <div class="h-48 rounded-2xl mb-6 overflow-hidden relative shadow-sm">
             <img src="{{ str_starts_with($classroom->cover_image, 'http') ? $classroom->cover_image : Storage::url($classroom->cover_image) }}" alt="Cover Kelas" class="w-full h-full object-cover">
@@ -30,6 +31,20 @@
             </div>
         </div>
     @endif
+=======
+    <div class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <div class="flex items-center gap-3 mb-1">
+                <a href="{{ route('siswa.dashboard') }}" class="text-gray-400 hover:text-blue-600 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                </a>
+                <h1 class="text-2xl font-bold text-gray-800">{{ $classroom->name }}</h1>
+                <span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs font-semibold border border-blue-100">{{ $classroom->class_code }}</span>
+            </div>
+            <p class="text-sm text-gray-500 ml-9">Pengajar: {{ $classroom->teacher->name ?? 'Admin' }}</p>
+        </div>
+    </div>
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
 
     <!-- Alpine Tabs -->
     <div x-data="{ tab: 'informasi' }" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
@@ -60,9 +75,13 @@
                                 <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
                                 <h3 class="font-semibold text-gray-800">{{ $announcement->title }}</h3>
                             </div>
+<<<<<<< HEAD
                             <div class="text-gray-700 text-sm ml-7 mb-3 prose prose-sm max-w-none trix-content">
                                 {!! $announcement->content !!}
                             </div>
+=======
+                            <p class="text-gray-600 text-sm ml-7 mb-2">{{ $announcement->content }}</p>
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                             <p class="text-xs text-gray-400 ml-7">{{ $announcement->created_at->diffForHumans() }}</p>
                         </div>
                     @empty
@@ -82,9 +101,15 @@
                             </div>
                             <h3 class="font-bold text-gray-800 mb-1">{{ $materi->title }}</h3>
                             <p class="text-xs text-gray-500 mb-4 line-clamp-2">{{ $materi->description }}</p>
+<<<<<<< HEAD
                             <button onclick="document.getElementById('modal-materi-{{ $materi->id }}').classList.remove('hidden')" class="text-sm font-medium text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
                                 Lihat Detail <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                             </button>
+=======
+                            <a href="{{ Storage::url($materi->file_path) }}" target="_blank" class="text-sm font-medium text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
+                                Unduh Materi <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            </a>
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                         </div>
                     @empty
                         <div class="col-span-full text-center py-10 text-gray-500 text-sm border border-dashed rounded-xl">Belum ada materi diunggah oleh guru.</div>
@@ -103,6 +128,7 @@
                                 <div class="p-5 border border-gray-100 rounded-xl bg-white shadow-sm hover:border-blue-200 transition-colors">
                                     <h3 class="font-bold text-gray-800 mb-1">{{ $tugas->title }}</h3>
                                     <p class="text-xs text-gray-500 mb-3">{{ $tugas->description }}</p>
+<<<<<<< HEAD
 
                                     @if(method_exists($tugas, 'questionBankReferences') && $tugas->questionBankReferences->isNotEmpty())
                                         <div class="mb-3 text-xs text-gray-600">
@@ -131,17 +157,30 @@
                                                     Remedial sampai {{ \Carbon\Carbon::parse($remedial->deadline)->format('d M Y H:i') }}
                                                 </span>
                                             @endif
+=======
+                                    
+                                    <div class="flex items-center justify-between mb-4">
+                                        <div class="flex items-center gap-1 text-xs font-medium {{ \Carbon\Carbon::parse($tugas->deadline)->isPast() ? 'text-red-500' : 'text-orange-500' }}">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                            Tenggat: {{ \Carbon\Carbon::parse($tugas->deadline)->format('d M Y H:i') }}
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                                         </div>
                                         @if($tugas->file_path)
                                             <a href="{{ Storage::url($tugas->file_path) }}" target="_blank" class="text-xs text-blue-600 hover:underline">File Soal</a>
                                         @endif
                                     </div>
 
+<<<<<<< HEAD
                                     @if($remedial && $remedial->note)
                                         <div class="mb-3 p-3 bg-yellow-50 text-yellow-800 text-xs border border-yellow-100 rounded-lg">
                                             Catatan remedial: {{ $remedial->note }}
                                         </div>
                                     @endif
+=======
+                                    @php
+                                        $submission = $tugas->submissions()->where('student_id', auth()->id())->first();
+                                    @endphp
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
 
                                     @if($submission)
                                         <div class="p-3 bg-green-50 rounded-lg border border-green-100 flex justify-between items-center">
@@ -159,7 +198,11 @@
                                             <a href="{{ Storage::url($submission->file_path) }}" target="_blank" class="text-xs text-green-600 hover:underline">Lihat Jawaban</a>
                                         </div>
                                     @else
+<<<<<<< HEAD
                                         @if($effectivePast)
+=======
+                                        @if(\Carbon\Carbon::parse($tugas->deadline)->isPast())
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                                             <div class="p-3 bg-red-50 text-red-600 text-xs font-semibold border border-red-100 rounded-lg text-center">
                                                 Waktu Pengumpulan Telah Habis
                                             </div>
@@ -194,6 +237,7 @@
                                     </div>
 
                                     @php
+<<<<<<< HEAD
                                         $attempt = $kuis->attempts()->where('student_id', auth()->id())->latest('created_at')->first();
                                         $quizRemedial = ($remedialQuizzes ?? collect())->get($kuis->id);
                                         $canTakeQuiz = !$attempt || ($quizRemedial && $quizRemedial->status === 'assigned');
@@ -206,11 +250,18 @@
                                     @endif
 
                                     @if(!$canTakeQuiz && $attempt)
+=======
+                                        $attempt = $kuis->attempts()->where('student_id', auth()->id())->first();
+                                    @endphp
+
+                                    @if($attempt)
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                                         <div class="p-3 bg-purple-50 rounded-lg border border-purple-100 text-center">
                                             <p class="text-xs text-purple-700 font-semibold mb-1">Sudah Dikerjakan</p>
                                             <p class="text-lg font-bold text-gray-800">Nilai: <span class="text-purple-600">{{ $attempt->score }}</span>/100</p>
                                         </div>
                                     @else
+<<<<<<< HEAD
                                         @if($attempt && $quizRemedial)
                                             <div class="mb-3 p-3 bg-yellow-50 text-yellow-800 text-xs border border-yellow-100 rounded-lg text-center">
                                                 Kamu mendapat Remedial. Nilai sebelumnya: {{ $attempt->score }}
@@ -218,6 +269,10 @@
                                         @endif
                                         <a href="{{ route('siswa.kuis', $kuis) }}" class="block w-full text-center py-2 bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-medium rounded-lg text-sm hover:shadow-md transition-shadow">
                                             {{ $attempt ? 'Kerjakan Remedial' : 'Mulai Kerjakan' }}
+=======
+                                        <a href="{{ route('siswa.kuis', $kuis) }}" class="block w-full text-center py-2 bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-medium rounded-lg text-sm hover:shadow-md transition-shadow">
+                                            Mulai Kerjakan
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
                                         </a>
                                     @endif
                                 </div>
@@ -231,6 +286,7 @@
 
         </div>
     </div>
+<<<<<<< HEAD
     @foreach($classroom->materials as $materi)
     <div id="modal-materi-{{ $materi->id }}" class="fixed inset-0 z-50 hidden bg-gray-900/50 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl w-full max-w-2xl p-8 shadow-xl relative my-8">
@@ -279,4 +335,6 @@
         .trix-content a { color: #2563eb !important; text-decoration: underline !important; }
     </style>
     @endpush
+=======
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
 </x-layouts.app>

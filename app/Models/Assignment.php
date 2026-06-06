@@ -4,7 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+<<<<<<< HEAD
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+=======
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Assignment extends Model
@@ -27,6 +30,7 @@ class Assignment extends Model
     {
         return $this->hasMany(Submission::class);
     }
+<<<<<<< HEAD
 
     public function questionBankReferences(): BelongsToMany
     {
@@ -37,4 +41,6 @@ class Assignment extends Model
             'question_bank_question_id'
         )->withPivot(['position'])->orderBy('assignment_question_bank_refs.position');
     }
+=======
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
 }

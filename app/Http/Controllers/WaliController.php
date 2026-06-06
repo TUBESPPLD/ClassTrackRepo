@@ -12,6 +12,7 @@ class WaliController extends Controller
 
     public function dashboardAnak()
     {
+<<<<<<< HEAD
         $user = auth()->user();
         
         // Eager load data to prevent N+1 queries
@@ -60,10 +61,26 @@ class WaliController extends Controller
                 'missedAssignments' => $missedAssignments,
                 'attendanceData' => [$hadir, $sakit, $izin, $alpa]
             ];
+=======
+        $students = auth()->user()->students;
+        $reports = [];
+
+        foreach ($students as $student) {
+            $nilaiTugas = Submission::where('student_id', $student->id)->avg('grade') ?? 0;
+            $nilaiKuis = QuizAttempt::where('student_id', $student->id)->avg('score') ?? 0;
+            $avgNilai = round(($nilaiTugas + $nilaiKuis) / 2, 2);
+
+            $total = Attendance::where('student_id', $student->id)->count();
+            $hadir = Attendance::where('student_id', $student->id)->where('status', 'hadir')->count();
+            $presensi = $total > 0 ? round(($hadir / $total) * 100, 2) : 0;
+
+            $reports[] = compact('student', 'avgNilai', 'presensi');
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
         }
 
         return view('dashboard-wali', compact('reports'));
     }
+<<<<<<< HEAD
 
     public function linkStudent(\Illuminate\Http\Request $request)
     {
@@ -80,4 +97,6 @@ class WaliController extends Controller
         
         return back()->with('success', 'Berhasil menautkan data anak Anda.');
     }
+=======
+>>>>>>> 9cab5579c573740aa9ce54d14c8f9974147f128a
 }
