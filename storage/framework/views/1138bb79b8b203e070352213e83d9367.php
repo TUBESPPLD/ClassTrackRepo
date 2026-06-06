@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo e($title ?? 'ClassTrack'); ?></title>
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
+    <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-outfit { font-family: 'Outfit', sans-serif; }
+        trix-toolbar [data-trix-button-group="file-tools"] { display: none; } /* Hide file uploads in Trix */
+        body { font-family: 'Inter', sans-serif; }
+        .font-outfit { font-family: 'Outfit', sans-serif; }
+        
+        /* Toast Animation */
+        .toast-enter { animation: slideIn 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+        .toast-leave { animation: slideOut 0.4s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="bg-[#f4f7fb] text-gray-800 antialiased" x-data="{ sidebarOpen: false }">
+
+    <!-- Global SweetAlert2 Notification Handlers -->
+    <?php if(session('success')): ?>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: "<?php echo e(session('success')); ?>",
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 4000,
+                    timerProgressBar: true,
+                    customClass: {
+                        popup: 'rounded-2xl shadow-xl border border-gray-100/50 bg-white/95 backdrop-blur-sm'
+                    }
+                });
+            });
+        </script>
+    <?php endif; ?>
+
+    <?php if(session('error')): ?>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Terdapat Kesalahan!',
+                    text: "<?php echo e(session('error')); ?>",
+                    customClass: {
+                        popup: 'rounded-3xl shadow-2xl border border-gray-100/50',
+                        confirmButton: 'rounded-xl px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold'
+                    }
+                });
+            });
+        </script>
+    <?php endif; ?>
+
+    <?php if($errors->any()): ?>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Terdapat Kesalahan!',
+                    html: `<ul class="list-disc list-inside text-left text-sm text-gray-600 space-y-1 mt-2">
+                        <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <li><?php echo e($error); ?></li>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    </ul>`,
+                    customClass: {
+                        popup: 'rounded-3xl shadow-2xl border border-gray-100/50',
+                        confirmButton: 'rounded-xl px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold'
+                    }
+                });
+            });
+        </script>
+    <?php endif; ?>
+
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- Sidebar -->
+        <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-[4px_0_24px_rgba(0,0,0,0.02)] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 flex flex-col">
+            <div class="flex items-center justify-center h-20 border-b border-gray-50 shrink-0">
+                <span class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-500 tracking-wider font-outfit">ClassTrack</span>
+            </div>
+            
+            <nav class="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto">
+                <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Menu Utama</p>
+                
+                <?php if(auth()->guard()->check()): ?>
+                    <?php if(auth()->user()->role === 'admin'): ?>
+                        <a href="<?php echo e(route('admin.dashboard')); ?>" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl hover:bg-blue-50 hover:text-blue-600 transition-all <?php echo e(request()->routeIs('admin.dashboard') ? 'bg-blue-50 text-blue-600 shadow-sm' : 'text-gray-600'); ?>">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                            Dashboard Admin
+                        </a>
+                        <a href="<?php echo e(route('admin.users')); ?>" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl hover:bg-blue-50 hover:text-blue-600 transition-all <?php echo e(request()->routeIs('admin.users') ? 'bg-blue-50 text-blue-600 shadow-sm' : 'text-gray-600'); ?>">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                            Kelola User
+                        </a>
+                    <?php elseif(auth()->user()->role === 'guru'): ?>
+                        <a href="<?php echo e(route('guru.dashboard')); ?>" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl hover:bg-blue-50 hover:text-blue-600 transition-all <?php echo e(request()->routeIs('guru.dashboard') ? 'bg-blue-50 text-blue-600 shadow-sm' : 'text-gray-600'); ?>">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                            Dashboard
+                        </a>
+                        <a href="<?php echo e(route('guru.kelas')); ?>" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl hover:bg-blue-50 hover:text-blue-600 transition-all <?php echo e(request()->routeIs('guru.kelas') ? 'bg-blue-50 text-blue-600 shadow-sm' : 'text-gray-600'); ?>">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                            Daftar Kelas
+                        </a>
+                        
+                        <!-- Contextual Menu for Guru -->
+                        <?php if(isset($classroom) && request()->routeIs('guru.*') && !request()->routeIs('guru.kelas') && !request()->routeIs('guru.dashboard')): ?>
+                            <div class="mt-6 mb-2">
+                                <p class="px-4 text-[10px] font-bold text-indigo-500 uppercase tracking-wider mb-2 truncate" title="<?php echo e($classroom->name); ?>">KELAS: <?php echo e($classroom->name); ?></p>
+                                <div class="space-y-1 pl-2 border-l-2 border-indigo-100 ml-4">
+                                    <a href="<?php echo e(route('guru.kelas.show', $classroom)); ?>" class="flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-r-xl hover:bg-indigo-50 hover:text-indigo-700 transition-all <?php echo e(request()->routeIs('guru.kelas.show') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600'); ?>">Detail Kelas</a>
+                                    <a href="<?php echo e(route('guru.tugas', $classroom)); ?>" class="flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-r-xl hover:bg-indigo-50 hover:text-indigo-700 transition-all <?php echo e(request()->routeIs('guru.tugas') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600'); ?>">Kelola Tugas</a>
+                                    <a href="<?php echo e(route('guru.kuis', $classroom)); ?>" class="flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-r-xl hover:bg-indigo-50 hover:text-indigo-700 transition-all <?php echo e(request()->routeIs('guru.kuis') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600'); ?>">Kelola Kuis</a>
+                                    <a href="<?php echo e(route('guru.bank-soal.index', $classroom)); ?>" class="flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-r-xl hover:bg-indigo-50 hover:text-indigo-700 transition-all <?php echo e(request()->routeIs('guru.bank-soal.*') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600'); ?>">Bank Soal</a>
+                                    <a href="<?php echo e(route('guru.monitoring', $classroom)); ?>" class="flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-r-xl hover:bg-indigo-50 hover:text-indigo-700 transition-all <?php echo e(request()->routeIs('guru.monitoring') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600'); ?>">Monitoring EWS</a>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+
+                    <?php elseif(auth()->user()->role === 'siswa'): ?>
+                        <a href="<?php echo e(route('siswa.dashboard')); ?>" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl hover:bg-blue-50 hover:text-blue-600 transition-all <?php echo e(request()->routeIs('siswa.dashboard') ? 'bg-blue-50 text-blue-600 shadow-sm' : 'text-gray-600'); ?>">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                            Dashboard
+                        </a>
+                        <a href="<?php echo e(route('siswa.nilai')); ?>" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl hover:bg-blue-50 hover:text-blue-600 transition-all <?php echo e(request()->routeIs('siswa.nilai') ? 'bg-blue-50 text-blue-600 shadow-sm' : 'text-gray-600'); ?>">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            Rekap Nilai
+                        </a>
+                        
+                        <!-- Contextual Menu for Siswa -->
+                        <?php if(isset($classroom) && request()->routeIs('siswa.kelas.show')): ?>
+                            <div class="mt-6 mb-2">
+                                <p class="px-4 text-[10px] font-bold text-green-600 uppercase tracking-wider mb-2 truncate" title="<?php echo e($classroom->name); ?>">KELAS: <?php echo e($classroom->name); ?></p>
+                                <div class="space-y-1 pl-2 border-l-2 border-green-100 ml-4">
+                                    <a href="<?php echo e(route('siswa.kelas.show', $classroom)); ?>" class="flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-r-xl bg-green-50 text-green-700">Ruang Kelas Utama</a>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+
+                    <?php elseif(auth()->user()->role === 'wali'): ?>
+                        <a href="<?php echo e(route('wali.dashboard')); ?>" class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl hover:bg-blue-50 hover:text-blue-600 transition-all <?php echo e(request()->routeIs('wali.dashboard') ? 'bg-blue-50 text-blue-600 shadow-sm' : 'text-gray-600'); ?>">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                            Dashboard Pemantauan
+                        </a>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </nav>
+
+            <div class="p-4 border-t border-gray-50 bg-gray-50/50 shrink-0">
+                <?php if(auth()->guard()->check()): ?>
+                <a href="<?php echo e(route('profile.edit')); ?>" class="block w-full">
+                    <div class="flex items-center gap-3 mb-4 px-2 hover:bg-gray-100 p-2 rounded-xl transition-colors">
+                        <?php if(auth()->user()->foto): ?>
+                            <img src="<?php echo e(Storage::url(auth()->user()->foto)); ?>" alt="Foto Profil" class="w-10 h-10 rounded-full object-cover shadow-md">
+                        <?php else: ?>
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-gray-700 to-gray-900 flex items-center justify-center text-white font-bold shadow-md">
+                                <?php echo e(strtoupper(substr(auth()->user()->name, 0, 1))); ?>
+
+                            </div>
+                        <?php endif; ?>
+                        <div class="overflow-hidden">
+                            <p class="text-sm font-semibold text-gray-800 truncate"><?php echo e(auth()->user()->name); ?></p>
+                            <p class="text-xs text-gray-500 capitalize">
+                                <?php echo e(auth()->user()->role); ?> 
+                                <?php if(auth()->user()->student_code): ?>
+                                    <span class="opacity-50">|</span> ID: <?php echo e(auth()->user()->student_code); ?>
+
+                                <?php endif; ?>
+                            </p>
+                        </div>
+                    </div>
+                </a>
+                <form method="POST" action="<?php echo e(route('logout')); ?>">
+                    <?php echo csrf_field(); ?>
+                    <button class="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-red-600 bg-white border border-red-100 rounded-xl hover:bg-red-50 hover:border-red-200 transition-all shadow-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                        Logout
+                    </button>
+                </form>
+                <?php endif; ?>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col h-screen overflow-hidden">
+            <!-- Topbar -->
+            <header class="h-20 bg-white/80 backdrop-blur-md flex items-center justify-between px-6 lg:px-10 z-10 border-b border-gray-100 shrink-0">
+                <div class="flex items-center">
+                    <button @click="sidebarOpen = true" class="lg:hidden text-gray-500 hover:text-blue-600 focus:outline-none mr-4 transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                    <!-- Breadcrumbs could go here if needed -->
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <span class="text-sm font-medium text-gray-500 bg-gray-50 px-4 py-2 rounded-full border border-gray-100 shadow-sm"><?php echo e(now()->translatedFormat('l, d F Y')); ?></span>
+                </div>
+            </header>
+
+            <!-- Backdrop for mobile sidebar -->
+            <div x-show="sidebarOpen" @click="sidebarOpen = false" class="fixed inset-0 z-40 bg-gray-900/40 backdrop-blur-sm lg:hidden" x-transition.opacity style="display: none;"></div>
+
+            <!-- Page Content -->
+            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-transparent p-6 lg:p-8">
+                <div class="max-w-7xl mx-auto">
+                    <?php echo e($slot); ?>
+
+                </div>
+            </main>
+        </div>
+    </div>
+    <?php echo $__env->yieldPushContent('scripts'); ?>
+
+    <script>
+        // Global SweetAlert2 Confirmation Helpers
+        window.confirmDelete = function(formId, text = 'Anda yakin ingin menghapus data ini?') {
+            Swal.fire({
+                title: 'Konfirmasi Hapus',
+                text: text,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#9ca3af',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal',
+                customClass: {
+                    popup: 'rounded-2xl',
+                    confirmButton: 'rounded-xl px-4 py-2 font-medium',
+                    cancelButton: 'rounded-xl px-4 py-2 font-medium'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const form = document.getElementById(formId);
+                    if (form) form.submit();
+                }
+            });
+        };
+
+        window.confirmAction = function(formId, title = 'Konfirmasi', text = 'Apakah Anda yakin?', confirmText = 'Ya', cancelText = 'Batal', confirmColor = '#3b82f6') {
+            Swal.fire({
+                title: title,
+                text: text,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: confirmColor,
+                cancelButtonColor: '#9ca3af',
+                confirmButtonText: confirmText,
+                cancelButtonText: cancelText,
+                customClass: {
+                    popup: 'rounded-2xl',
+                    confirmButton: 'rounded-xl px-4 py-2 font-medium',
+                    cancelButton: 'rounded-xl px-4 py-2 font-medium'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const form = document.getElementById(formId);
+                    if (form) form.submit();
+                }
+            });
+        };
+
+        // Global Cleanup Script for Overlays, Modals, and Back-Forward Cache
+        function forceCleanup() {
+            document.body.classList.remove('overflow-hidden', 'modal-open');
+            document.body.style.overflow = '';
+            document.body.style.pointerEvents = '';
+            
+            // Cleanup SweetAlert2 leftovers
+            document.body.classList.remove('swal2-shown', 'swal2-height-auto');
+            
+            // Remove lingering naked backdrops not tied to active components
+            document.querySelectorAll('.bg-gray-900\\/50, .bg-black\\/50, .backdrop-blur').forEach(el => {
+                // Only remove if it's completely empty (a pure backdrop div) and visible
+                if (el.children.length === 0 && !el.hasAttribute('x-show') && !el.classList.contains('hidden')) {
+                    el.remove();
+                }
+            });
+
+            // Hide all standard DOM modals (those without x-show)
+            document.querySelectorAll('.fixed.inset-0.z-50').forEach(el => {
+                if (!el.hasAttribute('x-show') && !el.classList.contains('hidden')) {
+                    el.classList.add('hidden');
+                }
+            });
+        }
+
+        window.addEventListener('pageshow', function(event) {
+            forceCleanup();
+            // Reset any AlpineJS submitting states in bfcache
+            document.querySelectorAll('[x-data]').forEach(el => {
+                if (el._x_dataStack && el._x_dataStack[0] && el._x_dataStack[0].submitting !== undefined) {
+                    el._x_dataStack[0].submitting = false;
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', forceCleanup);
+
+        // Intercept any modal close buttons to also trigger cleanup
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('[onclick*="classList.add(\'hidden\')"]')) {
+                setTimeout(forceCleanup, 50);
+            }
+        });
+    </script>
+
+
+</body>
+</html>
+<?php /**PATH C:\Users\PC\Downloads\ClassTrackRepo-main (1)\ClassTrackRepo-main\resources\views/components/layouts/app.blade.php ENDPATH**/ ?>
